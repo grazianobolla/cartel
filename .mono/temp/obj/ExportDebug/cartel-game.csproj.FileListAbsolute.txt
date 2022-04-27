@@ -1,0 +1,10 @@
+/home/graziano/Documents/cartel-csharp/.mono/temp/bin/ExportDebug/cartel-game.dll
+/home/graziano/Documents/cartel-csharp/.mono/temp/bin/ExportDebug/cartel-game.pdb
+/home/graziano/Documents/cartel-csharp/.mono/temp/bin/ExportDebug/Newtonsoft.Json.dll
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.csprojAssemblyReference.cache
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.AssemblyInfoInputs.cache
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.AssemblyInfo.cs
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.csproj.CoreCompileInputs.cache
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.csproj.CopyComplete
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.dll
+/home/graziano/Documents/cartel-csharp/.mono/temp/obj/ExportDebug/cartel-game.pdb

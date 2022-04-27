@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "1mUoqwrz1NDzA0jKZBMOF7bmkIknXnmpe2vwp36RBmsJXXhfDqz481gvI/oCFo1PpPzkyyi5ShxQLaTXpE7YfA==",
+  "success": true,
+  "projectFilePath": "/home/graziano/Documents/cartel-csharp/cartel-game.csproj",
+  "expectedPackageFiles": [
+    "/home/graziano/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

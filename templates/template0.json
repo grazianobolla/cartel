@@ -1,0 +1,147 @@
+{
+	"name": "Basic Monopoly Game",
+	"settings": {
+		"initial-money": 1500
+	},
+	"tile-count": {
+		"property": 6,
+		"state": 1,
+		"chance": 2
+	},
+	"properties": {
+		"normal": [
+			[
+				{
+					"label": "Mediterranean Avenue",
+					"price": 60
+				},
+				{
+					"label": "Baltic Avenue",
+					"price": 60
+				},
+				{
+					"label": "El Paso Avenue",
+					"price": 60
+				}
+			],
+			[
+				{
+					"label": "Oriental Avenue",
+					"price": 100
+				},
+				{
+					"label": "Vermont Avenue",
+					"price": 100
+				},
+				{
+					"label": "Connecticut Avenue",
+					"price": 100
+				}
+			],
+			[
+				{
+					"label": "St. Charles Place",
+					"price": 140
+				},
+				{
+					"label": "States Avenue",
+					"price": 140
+				},
+				{
+					"label": "Virginia Avenue",
+					"price": 160
+				}
+			],
+			[
+				{
+					"label": "St. James Place",
+					"price": 180
+				},
+				{
+					"label": "Tennesse Avenue",
+					"price": 180
+				},
+				{
+					"label": "New York Avenue",
+					"price": 200
+				}
+			],
+			[
+				{
+					"label": "Kentucky Avenue",
+					"price": 220
+				},
+				{
+					"label": "Indiana Avenue",
+					"price": 220
+				},
+				{
+					"label": "Illinois Avenue",
+					"price": 240
+				}
+			],
+			[
+				{
+					"label": "Atlantic Avenue",
+					"price": 260
+				},
+				{
+					"label": "Ventnor Avenue",
+					"price": 260
+				},
+				{
+					"label": "Marvin Gardens",
+					"price": 280
+				}
+			],
+			[
+				{
+					"label": "Pacific Avenue",
+					"price": 300
+				},
+				{
+					"label": "North Carolina Avenue",
+					"price": 300
+				},
+				{
+					"label": "Pennsylvania Avenue",
+					"price": 320
+				}
+			],
+			[
+				{
+					"label": "Park Place",
+					"price": 350
+				},
+				{
+					"label": "Boardwalk",
+					"price": 400
+				},
+				{
+					"label": "New York City",
+					"price": 400
+				}
+			]
+		],
+		"state": [
+			{
+				"label": "Railroad Company",
+				"price": 200
+			},
+			{
+				"label": "Water Company",
+				"price": 150
+			}
+		]
+	},
+	"chance-data": [
+		{
+			"text": "Te detuvieron por porte ilicito de un arma de fuego.",
+			"cost": -500
+		},
+		{
+			"text": "Fuiste elegido para una pensiòn por discapacidad.",
+			"cost": 420
+		}
+	]
+}

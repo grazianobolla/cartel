@@ -1,0 +1,49 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/graziano/Documents/cartel-csharp/cartel-game.csproj": {}
+  },
+  "projects": {
+    "/home/graziano/Documents/cartel-csharp/cartel-game.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/graziano/Documents/cartel-csharp/cartel-game.csproj",
+        "projectName": "cartel-game",
+        "projectPath": "/home/graziano/Documents/cartel-csharp/cartel-game.csproj",
+        "packagesPath": "/home/graziano/.nuget/packages/",
+        "outputPath": "/home/graziano/Documents/cartel-csharp/.mono/temp/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/graziano/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/mono/msbuild/Current/bin/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
