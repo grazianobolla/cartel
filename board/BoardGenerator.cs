@@ -5,7 +5,7 @@ using static Godot.GD;
 
 public class BoardGenerator : Node
 {
-    private List<Tile> boardList = new List<Tile>();
+    private List<Tile> _boardList = new List<Tile>();
 
     public void GenerateFromTemplate(GameTemplate templ)
     {
@@ -16,9 +16,9 @@ public class BoardGenerator : Node
             templ.GetTileCount(Tile.Type.STATE),
             templ.GetTileCount(Tile.Type.CHANCE)
         );
-        FillBoard(templ.GenerateDataList(boardList));
+        FillBoard(templ.GenerateDataList(_boardList));
 
-        Board.SetList(boardList);
+        Board.SetList(_boardList);
     }
 
     private void InstanceBoard(int sideLenght, String tileModelPath, int tileGap, Spatial parent)
@@ -39,7 +39,7 @@ public class BoardGenerator : Node
 
             pos = tile.Translation;
 
-            boardList.Add(tile as Tile);
+            _boardList.Add(tile as Tile);
             parent.AddChild(tile);
 
             if (i % sideLenght == 0 && i > 0)
@@ -51,14 +51,14 @@ public class BoardGenerator : Node
 
     private void FillBoardTypes(int propertyCount, int stateCount, int chanceCount)
     {
-        int boardSideLenght = (boardList.Count / 4);
+        int boardSideLenght = (_boardList.Count / 4);
 
-        Print("filling board types lenght ", boardSideLenght, " (of ", boardList.Count, ")");
+        Print("filling board types lenght ", boardSideLenght, " (of ", _boardList.Count, ")");
 
         for (int side = 0; side < 4; side++)
         {
             int sideArrayStart = side * boardSideLenght;
-            var sideList = boardList.GetRange(sideArrayStart, boardSideLenght);
+            var sideList = _boardList.GetRange(sideArrayStart, boardSideLenght);
 
             //sets the first element of the array to a corner type
             sideList[0].type = Tile.Type.CORNER;
@@ -73,13 +73,13 @@ public class BoardGenerator : Node
 
     private void FillBoard(List<TileData> dataList)
     {
-        if (dataList.Count != boardList.Count)
-            PrintErr("dataList and boardList count do not match");
+        if (dataList.Count != _boardList.Count)
+            PrintErr("dataList and _boardList count do not match");
 
-        for (int i = 0; i < boardList.Count; i++)
+        for (int i = 0; i < _boardList.Count; i++)
         {
-            Tile tile = boardList[i];
-            tile.Init(dataList[i], i);
+            Tile tile = _boardList[i];
+            tile.Initialize(dataList[i], i);
         }
     }
 

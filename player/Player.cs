@@ -7,15 +7,15 @@ public class Player : Spatial
 {
     public enum State { NONE, JAILED };
 
-    public int id { get; set; } = 0;
-    public int index { get; set; } = 0;
+    public int id { get; private set; } = 0;
+    public int index { get; private set; } = 0;
     public List<Tile> ownedTiles { get; } = new List<Tile>();
-    public State state = State.NONE;
-    public int jailTime = 0;
+    public State state { get; private set; } = State.NONE;
+    public int jailTime { get; private set; } = 0;
 
-    private int money = 0;
+    private int _money = 0;
 
-    public void Init(int id, int money)
+    public void Initialize(int id, int money)
     {
         this.id = id;
         this.Money = money;
@@ -74,12 +74,12 @@ public class Player : Spatial
 
     public int Money
     {
-        get { return money; }
+        get { return _money; }
         set
         {
-            money = value;
-            //TODO: update airconsole
-            if (money < 1)
+            _money = value;
+            //TODO: update controller label
+            if (_money < 1)
                 Print("player ", id, "lost!");
         }
     }

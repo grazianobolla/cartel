@@ -5,19 +5,19 @@ using static Godot.GD;
 
 public class GameTemplate
 {
-    private JObject template;
+    private JObject _template;
 
     public GameTemplate(String path)
     {
         String jsonString = Utils.ReadFile(path);
-        template = JObject.Parse(jsonString);
+        _template = JObject.Parse(jsonString);
     }
 
     public bool Check() { return true; }
 
     public int GetSideCount()
     {
-        var tileCount = template["tile-count"];
+        var tileCount = _template["tile-count"];
         return (int)tileCount["property"] + (int)tileCount["state"] + (int)tileCount["chance"];
     }
 
@@ -26,13 +26,13 @@ public class GameTemplate
         switch (type)
         {
             case Tile.Type.PROPERTY:
-                return (int)template["tile-count"]["property"];
+                return (int)_template["tile-count"]["property"];
 
             case Tile.Type.STATE:
-                return (int)template["tile-count"]["state"];
+                return (int)_template["tile-count"]["state"];
 
             case Tile.Type.CHANCE:
-                return (int)template["tile-count"]["chance"];
+                return (int)_template["tile-count"]["chance"];
         }
 
         PrintErr("wrong tile type ", type);
@@ -41,14 +41,14 @@ public class GameTemplate
 
     public int GetStartingMoney()
     {
-        return (int)template["settings"]["initial-money"];
+        return (int)_template["settings"]["initial-money"];
     }
 
     public (String text, int cost) GetRandomChanceData()
     {
-        int size = ((JArray)template["chance-data"]).Count;
+        int size = ((JArray)_template["chance-data"]).Count;
         Int32 index = (Int32)(Randi() % size);
-        var data = template["chance-data"][index];
+        var data = _template["chance-data"][index];
         return ((String)data["text"], (int)data["cost"]);
     }
 
@@ -59,7 +59,7 @@ public class GameTemplate
         int propertyCount, groupCount, stateCount, cornerCount;
         propertyCount = groupCount = stateCount = cornerCount = 0;
 
-        var properties = template["properties"];
+        var properties = _template["properties"];
 
         foreach (Tile tile in boardList)
         {

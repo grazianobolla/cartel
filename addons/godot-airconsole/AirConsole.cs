@@ -6,24 +6,11 @@ using static Godot.GD;
 public class AirConsole : Node
 {
     [Signal]
-    public delegate void OnMessage(int deviceId, Godot.Collections.Dictionary data);
-    [Signal]
-    public delegate void OnConnect(int deviceId);
-    [Signal]
-    public delegate void OnDisconnect(int deviceId);
-    [Signal]
-    public delegate void OnActivePlayersChange(int playerNumber);
-
-    private JavaScriptObject airconsole;
-    private List<JavaScriptObject> callbacks = new List<JavaScriptObject>();
+    public delegate void OnMessage(int deviceId, Godot.Object data);
     public bool ready = false;
 
-    private JavaScriptObject CreateCallback(String func)
-    {
-        JavaScriptObject cb = JavaScript.CreateCallback(this, func);
-        callbacks.Add(cb);
-        return cb;
-    }
+    private JavaScriptObject _airconsole;
+    private List<JavaScriptObject> _callbacks = new List<JavaScriptObject>();
 
     public override void _Ready()
     {
@@ -34,7 +21,7 @@ public class AirConsole : Node
         }
 
         JavaScript.Eval("airconsole = new AirConsole({device_motion: 50})");
-        airconsole = JavaScript.GetInterface("airconsole");
+        _airconsole = JavaScript.GetInterface("airconsole");
 
         ConnectCallbacks();
         Print("airconsole initialized");
@@ -43,29 +30,18 @@ public class AirConsole : Node
 
     private void ConnectCallbacks()
     {
-        airconsole.Set("onMessage", CreateCallback("cbOnMessage"));
-        airconsole.Set("onConnect", CreateCallback("cbOnConnect"));
-        airconsole.Set("onDisconnect", CreateCallback("cbOnDisconnect"));
-        airconsole.Set("onActivePlayersChange", CreateCallback("cbOnActivePlayersChange"));
+        _airconsole.Set("onMessage", CreateCallback("cbOnMessage"));
+    }
+
+    private JavaScriptObject CreateCallback(String func)
+    {
+        JavaScriptObject cb = JavaScript.CreateCallback(this, func);
+        _callbacks.Add(cb);
+        return cb;
     }
 
     private void cbOnMessage(Godot.Collections.Array args)
     {
-        EmitSignal(nameof(OnMessage), args[0], args[1]);
-    }
-
-    private void cbOnConnect(int deviceId)
-    {
-        EmitSignal(nameof(OnDisconnect), deviceId);
-    }
-
-    private void cbOnDisconnect(int deviceId)
-    {
-        EmitSignal(nameof(OnDisconnect), deviceId);
-    }
-
-    private void cbOnActivePlayersChange(int playerNumber)
-    {
-        EmitSignal(nameof(OnActivePlayersChange), playerNumber);
+        EmitSignal("OnMessage", (int)args[0], args[1]);
     }
 }

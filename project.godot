@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 AirConsole="*res://addons/godot-airconsole/AirConsole.cs"
+Controller="*res://game/Controller.cs"
 
 [physics]
 

@@ -7,26 +7,26 @@ public class Tile : Spatial
 
     public enum Type { NONE, CORNER, PROPERTY, STATE, CHANCE };
     public Type type { get; set; } = Type.NONE;
-    public int index { get; set; } = 0;
+    public int index { get; private set; } = 0;
     public Player owner { get; set; } = null;
 
-    private TileData data;
+    private TileData _data;
 
-    public void Init(TileData data, int index)
+    public void Initialize(TileData data, int index)
     {
-        this.data = data;
+        this._data = data;
         this.index = index;
         UpdateVisual();
     }
 
     public int GetFee()
     {
-        return data.houses * 10;
+        return _data.houses * 10;
     }
 
     public int GetGroup()
     {
-        return data.group;
+        return _data.group;
     }
 
     public bool IsBuyable()
@@ -36,12 +36,12 @@ public class Tile : Spatial
 
     public int GetPrice()
     {
-        return data.price;
+        return _data.price;
     }
 
     public String GetLabel()
     {
-        return data.label;
+        return _data.label;
     }
 
     public int GetHousePrice()
@@ -51,10 +51,10 @@ public class Tile : Spatial
 
     public bool AddHouse()
     {
-        if (data.houses >= MAX_HOUSE_COUNT)
+        if (_data.houses >= MAX_HOUSE_COUNT)
             return false;
 
-        data.houses += 1;
+        _data.houses += 1;
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
         houseModel.Translate(new Vector3((float)GD.RandRange(0.7, -0.7), 0, -1));
         UpdateVisual();
@@ -88,17 +88,17 @@ public class Tile : Spatial
             case Type.PROPERTY:
             case Type.STATE:
                 UpdateMesh(this.type == Type.PROPERTY ? Colors.Blue : Colors.Yellow);
-                UpdateText($"{data.label}\nprice: {data.price}\ngroup: {data.group}\nfee: {GetFee()}");
+                UpdateText($"{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
                 break;
 
             case Type.CORNER:
                 UpdateMesh(Colors.Magenta);
-                UpdateText($"{data.group}");
+                UpdateText($"{_data.group}");
                 break;
 
             case Type.CHANCE:
                 UpdateMesh(Colors.White);
-                UpdateText($"{data.label}");
+                UpdateText($"{_data.label}");
                 break;
 
             case Type.NONE:
@@ -116,7 +116,6 @@ public struct TileData
     public int price { get; }
     public int group { get; }
     public int houses { get; set; }
-    public Player owner { get; }
 
     public TileData(String label, int price, int group)
     {
@@ -124,6 +123,5 @@ public struct TileData
         this.price = price;
         this.group = group;
         this.houses = 0;
-        this.owner = null;
     }
 }

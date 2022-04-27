@@ -4,15 +4,16 @@ using static Godot.GD;
 
 public class PlayerManager : Node
 {
-    private PackedScene playerScene = (PackedScene)GD.Load("res://player/player.tscn");
     public List<Player> playersList { get; } = new List<Player>();
+
+    private PackedScene _playerScene = (PackedScene)GD.Load("res://player/player.tscn");
 
     public void AddPlayer(int startingMoney)
     {
-        Player player = (Player)playerScene.Instance();
+        Player player = (Player)_playerScene.Instance();
         AddChild(player);
         playersList.Add(player);
-        player.Init(playersList.Count - 1, startingMoney);
+        player.Initialize(playersList.Count - 1, startingMoney);
     }
 
     public int GetNextId(int currentId)

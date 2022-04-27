@@ -16,11 +16,11 @@ public partial class GameLogic : Spatial
                     return;
 
                 Print("landed on someones property, paying ", tile.GetFee());
-                playerManager.TransferMoney(player, tile.owner, tile.GetFee());
+                _playerManager.TransferMoney(player, tile.owner, tile.GetFee());
                 break;
 
             case Tile.Type.CHANCE:
-                var chanceData = template.GetRandomChanceData();
+                var chanceData = _template.GetRandomChanceData();
                 //TODO: show player message
                 Print("landed on chance tile (", chanceData.text, ")");
                 player.Money += chanceData.cost;

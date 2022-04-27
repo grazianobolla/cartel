@@ -12,30 +12,30 @@ public partial class GameLogic : Spatial
     public State currentState = State.WAITING;
     public int currentPlayerId = 0;
 
-    private GameTemplate template;
-    private PlayerManager playerManager;
+    private GameTemplate _template;
+    private PlayerManager _playerManager;
 
     public override void _Ready()
     {
         Randomize();
-        GetNode("DebugPanel").Connect("key_pressed", this, "ProcessKey");
-        playerManager = (PlayerManager)GetNode("PlayerManager");
+        GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
+        _playerManager = (PlayerManager)GetNode("PlayerManager");
         CreateGame();
     }
 
     public void CreateGame(String templatePath = "res://templates/template0.json")
     {
-        template = new GameTemplate(templatePath);
+        _template = new GameTemplate(templatePath);
 
-        if (!template.Check())
+        if (!_template.Check())
             PrintErr("could not validate template");
 
-        int startingMoney = template.GetStartingMoney();
+        int startingMoney = _template.GetStartingMoney();
 
-        GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(template);
+        GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
 
-        playerManager.AddPlayer(startingMoney);
-        playerManager.AddPlayer(startingMoney);
+        _playerManager.AddPlayer(startingMoney);
+        _playerManager.AddPlayer(startingMoney);
     }
 
     private uint GetDiceNumber()
@@ -43,45 +43,24 @@ public partial class GameLogic : Spatial
         return Randi() % 12 + 1;
     }
 
-    private void ProcessKey(int playerId, Godot.Collections.Dictionary data)
+    private void OnReceiveAction(int playerId, Controller.Instruction instruction)
     {
         if (playerId != currentPlayerId)
             return;
 
-        switch (data["instruction"])
+        Player player = GetCurrentPlayer();
+
+        switch (instruction)
         {
-            case "shake":
+            case Controller.Instruction.SHAKE:
                 StartCycle((int)GetDiceNumber());
                 break;
 
-            case "interact":
-                Interact((String)data["action"]);
-                break;
-        }
-    }
+            case Controller.Instruction.BUY:
+                if (currentState != State.INTERACTING)
+                    return;
 
-    private void Interact(String action)
-    {
-        if (currentState != State.INTERACTING)
-            return;
-
-        Player player = GetCurrentPlayer();
-
-        switch (action)
-        {
-            case "buy":
                 BuyTile(player);
-                break;
-
-            case "buy-house":
-                if (BuyHouse(player))
-                {
-                    EmitSignal(nameof(FinishedInteraction));
-                }
-                break;
-
-            case "omit":
-                EmitSignal(nameof(FinishedInteraction));
                 break;
         }
     }
@@ -107,10 +86,10 @@ public partial class GameLogic : Spatial
             await ToSignal(this, nameof(FinishedInteraction));
         }
 
-        currentPlayerId = playerManager.GetNextId(currentPlayerId);
+        currentPlayerId = _playerManager.GetNextId(currentPlayerId);
 
         while (GetCurrentPlayer().CanPlay() == false)
-            currentPlayerId = playerManager.GetNextId(currentPlayerId);
+            currentPlayerId = _playerManager.GetNextId(currentPlayerId);
 
         currentState = State.WAITING;
     }
@@ -128,6 +107,6 @@ public partial class GameLogic : Spatial
 
     private Player GetCurrentPlayer()
     {
-        return playerManager.GetPlayer(currentPlayerId);
+        return _playerManager.GetPlayer(currentPlayerId);
     }
 }
