@@ -19,6 +19,7 @@ public partial class GameLogic : Spatial
     {
         Randomize();
         GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
+        GetNode("/root/Controller").Connect("DebugShake", this, nameof(OnDebugShake));
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         CreateGame();
     }
@@ -43,6 +44,13 @@ public partial class GameLogic : Spatial
         return Randi() % 12 + 1;
     }
 
+    private void OnDebugShake(int index)
+    {
+        
+        Player player = GetCurrentPlayer();
+        StartCycle(player.GetDistanceTo(index));
+    }
+
     private void OnReceiveAction(int playerId, Controller.Instruction instruction)
     {
         if (playerId != currentPlayerId)
@@ -61,6 +69,20 @@ public partial class GameLogic : Spatial
                     return;
 
                 BuyTile(player);
+                break;
+
+            case Controller.Instruction.BUY_HOUSE:
+                if (currentState != State.INTERACTING)
+                    return;
+
+                BuyHouse(player);
+                break;
+
+            case Controller.Instruction.OMIT:
+                if (currentState != State.INTERACTING)
+                    return;
+
+                EmitSignal(nameof(FinishedInteraction));
                 break;
         }
     }
@@ -100,7 +122,7 @@ public partial class GameLogic : Spatial
         await player.Move(moveAmount);
         if (player.index <= initialIndex)
         {
-            player.Money += 200;
+            player.money += 200;
             Print("player ", player.id, " get start bonus");
         }
     }

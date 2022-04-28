@@ -31,7 +31,7 @@ public class PlayerManager : Node
     public void TransferMoney(Player from, Player to, int amount)
     {
         //TODO: check if the player has money
-        from.Money -= amount;
-        to.Money += amount;
+        from.money -= amount;
+        to.money += amount;
     }
 }

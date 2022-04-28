@@ -108,6 +108,17 @@ public class Tile : Spatial
         }
     }
 
+    private void _on_DebugArea_input_event(Node camera, InputEvent ev, Vector3 position, Vector3 normal, int shapeIdx)
+    {
+        if (ev is InputEventMouseButton eventButton)
+        {
+            if (eventButton.IsPressed() && eventButton.ButtonIndex == (int)ButtonList.Left)
+            {
+                GetNode<Controller>("/root/Controller").DebugShakeMethod(index);
+            }
+        }
+    }
+
 }
 
 public struct TileData

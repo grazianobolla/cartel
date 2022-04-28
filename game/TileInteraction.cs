@@ -23,11 +23,12 @@ public partial class GameLogic : Spatial
                 var chanceData = _template.GetRandomChanceData();
                 //TODO: show player message
                 Print("landed on chance tile (", chanceData.text, ")");
-                player.Money += chanceData.cost;
+                player.money += chanceData.cost;
                 break;
 
             case Tile.Type.CORNER:
-                if (tile.GetGroup() != 3) //always the jail corner
+                //3 is always the jail corner
+                if (tile.GetGroup() != 3)
                     return;
 
                 int jailIndex = Board.GetSize() / 4;
@@ -56,13 +57,13 @@ public partial class GameLogic : Spatial
             return false;
         }
 
-        if (player.Money < tile.GetPrice())
+        if (player.money < tile.GetPrice())
         {
             Print("you dont have enough money");
             return false;
         }
 
-        player.Money -= tile.GetPrice();
+        player.money -= tile.GetPrice();
         AssignTile(player, tile);
         Print("player ", player.id, " purchased tile ", tile.GetLabel(), " at ", tile.GetPrice());
         return true;
@@ -85,14 +86,14 @@ public partial class GameLogic : Spatial
             return false;
         }
 
-        if (player.Money < price)
+        if (player.money < price)
         {
             Print("you dont have enough money");
         }
 
         if (tile.AddHouse())
         {
-            player.Money -= price;
+            player.money -= price;
             return true;
         }
 

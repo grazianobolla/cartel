@@ -28,7 +28,6 @@ sensitivity = 1.0
 [node name="TileGroup" type="Spatial" parent="."]
 
 [node name="DebugPanel" parent="." instance=ExtResource( 5 )]
-game_logic = NodePath("..")
 
 [node name="DebugInfo" parent="." instance=ExtResource( 6 )]
 gameLogicPath = NodePath("..")

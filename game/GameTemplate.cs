@@ -78,7 +78,8 @@ public class GameTemplate
                             groupCount = (groupCount + 1) % ((JArray)properties["normal"]).Count;
                         }
 
-                        propertyCount = (propertyCount + 1) % 3; //TODO: magic num
+                        //TODO: magic num
+                        propertyCount = (propertyCount + 1) % 3;
                         break;
                     }
                 case Tile.Type.STATE:

@@ -52,3 +52,5 @@ texture = SubResource( 2 )
 [node name="CollisionShape" type="CollisionShape" parent="DebugArea"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
 shape = SubResource( 5 )
+
+[connection signal="input_event" from="DebugArea" to="." method="_on_DebugArea_input_event"]

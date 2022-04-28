@@ -18,7 +18,7 @@ public class Player : Spatial
     public void Initialize(int id, int money)
     {
         this.id = id;
-        this.Money = money;
+        this.money = money;
         this.Translation = Board.GetTilePos(index);
     }
 
@@ -72,7 +72,7 @@ public class Player : Spatial
         return state != State.JAILED;
     }
 
-    public int Money
+    public int money
     {
         get { return _money; }
         set
