@@ -4,10 +4,10 @@ using System;
 //TODO: remove debug stuff here
 public class Controller : Node
 {
-    [Signal] public delegate void OnAction(int playerId, Instruction instruction);
+    [Signal] public delegate void OnAction(int playerId, Action action, Godot.Object data);
     [Signal] public delegate void DebugShake(int index);
 
-    public enum Instruction { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
+    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
 
     private AirConsole _airconsole;
 
@@ -24,21 +24,21 @@ public class Controller : Node
             return;
 
         _airconsole.Connect("OnMessage", this, "OnAirconsoleControllerMessage");
-        _airconsole.SetActivePlayers(2); //TODO: this
+        _airconsole.SetActivePlayers(8); //TODO: .
     }
 
     private void OnAirconsoleControllerMessage(int playerNumber, Godot.Object data)
     {
         string str = (string)data.Get("instruction");
-        Instruction instruction = Instruction.NONE;
+        Action action = Action.NONE;
 
-        if (Enum.TryParse<Instruction>(str, out instruction))
-            EmitSignal(nameof(OnAction), playerNumber, instruction);
+        if (Enum.TryParse<Action>(str, out action))
+            EmitSignal(nameof(OnAction), playerNumber, action);
     }
 
-    public void SendDebugControllerMessage(int playerNumber, Instruction instruction)
+    public void SendDebugControllerMessage(int playerNumber, Action instruction)
     {
-        EmitSignal(nameof(OnAction), playerNumber, instruction);
+        EmitSignal(nameof(OnAction), playerNumber, instruction, null);
     }
 
     public void SendDebugShakeMethod(int index)

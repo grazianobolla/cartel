@@ -1,8 +1,35 @@
 using System.Threading.Tasks;
 using static Godot.GD;
 
-public class TileInteraction
+public class TileInteractor
 {
+    //Called when a player interacts with the game (in his turn)
+    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Object data)
+    {
+        switch (action)
+        {
+            case Controller.Action.BUY:
+                if (BuyTile(player))
+                    return true;
+                break;
+
+            case Controller.Action.BUY_HOUSE:
+                if (BuyHouse(player))
+                    return true;
+                break;
+
+            case Controller.Action.OMIT:
+                return true;
+
+            default:
+                PrintErr("unkown action");
+                return false;
+        }
+
+        return false;
+    }
+
+    //Called when a player lands on a tile, this happens automatically
     public async Task ProcessLanding(Player player, PlayerManager playerManager, GameTemplate template)
     {
         Tile tile = Board.GetTile(player.index);

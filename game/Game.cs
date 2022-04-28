@@ -13,16 +13,22 @@ public partial class Game : Spatial
 
     private GameTemplate _template;
     private PlayerManager _playerManager;
-    private TileInteraction _tileInteraction;
+    private TileInteractor _tileInteractor;
 
     public override void _Ready()
     {
-        _tileInteraction = new TileInteraction();
+        _tileInteractor = new TileInteractor();
         _playerManager = (PlayerManager)GetNode("PlayerManager");
 
         Randomize();
         CreateGame();
         ConnectSignals();
+    }
+
+    private void ConnectSignals()
+    {
+        GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
+        GetNode("/root/Controller").Connect("DebugShake", this, nameof(OnDebugShake));
     }
 
     public void CreateGame(String templatePath = "res://templates/template0.json")
@@ -35,46 +41,21 @@ public partial class Game : Spatial
         GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
     }
 
-    private void ConnectSignals()
+    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Object data)
     {
-        GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
-        GetNode("/root/Controller").Connect("DebugShake", this, nameof(OnDebugShake));
-    }
-
-    private void OnReceiveAction(int playerId, Controller.Instruction instruction)
-    {
-        if (playerId != currentPlayerId)
+        if (currentPlayerId != playerId)
             return;
 
-        Player player = GetCurrentPlayer();
-
-        switch (instruction)
+        if (action == Controller.Action.SHAKE)
         {
-            case Controller.Instruction.SHAKE:
-                StartCycle((int)GetDiceNumber());
-                break;
-
-            case Controller.Instruction.BUY:
-                if (currentState != State.INTERACTING)
-                    return;
-
-                _tileInteraction.BuyTile(player);
-                break;
-
-            case Controller.Instruction.BUY_HOUSE:
-                if (currentState != State.INTERACTING)
-                    return;
-
-                _tileInteraction.BuyHouse(player);
-                break;
-
-            case Controller.Instruction.OMIT:
-                if (currentState != State.INTERACTING)
-                    return;
-
-                EmitSignal(nameof(FinishedInteraction));
-                break;
+            StartCycle((int)GetDiceNumber());
+            return;
         }
+
+        if (currentState != State.INTERACTING)
+            return;
+
+        _tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, data);
     }
 
     private async void StartCycle(int diceNumber)
@@ -90,7 +71,7 @@ public partial class Game : Spatial
         currentState = State.MOVING;
         await MoveState(player, diceNumber);
         currentState = State.PROCESSING;
-        await _tileInteraction.ProcessLanding(player, _playerManager, _template);
+        await _tileInteractor.ProcessLanding(player, _playerManager, _template);
 
         if (player.CanPlay())
         {
