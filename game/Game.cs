@@ -17,7 +17,7 @@ public partial class Game : Spatial
 
     public override void _Ready()
     {
-        _tileInteractor = new TileInteractor();
+        _tileInteractor = (TileInteractor)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
 
         Randomize();
@@ -41,37 +41,45 @@ public partial class Game : Spatial
         GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
     }
 
-    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Object data)
+    //Called when a player requests an interaction with the game
+    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array data)
     {
         if (currentPlayerId != playerId)
             return;
 
-        if (action == Controller.Action.SHAKE)
+        switch (action)
         {
-            StartCycle((int)GetDiceNumber());
-            return;
+            case Controller.Action.SHAKE:
+                StartCycle((int)GetDiceNumber());
+                break;
+
+            default:
+                if (currentState != State.INTERACTING)
+                    return;
+
+                if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, data))
+                    EmitSignal(nameof(FinishedInteraction));
+
+                break;
         }
-
-        if (currentState != State.INTERACTING)
-            return;
-
-        _tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, data);
     }
 
     private async void StartCycle(int diceNumber)
     {
+        Player player = GetCurrentPlayer();
+
         if (currentState != State.WAITING)
             return;
 
-        Player player = GetCurrentPlayer();
-
+        //Should not happen
         if (!player.CanPlay())
             return;
 
         currentState = State.MOVING;
         await MoveState(player, diceNumber);
+
         currentState = State.PROCESSING;
-        await _tileInteractor.ProcessLanding(player, _playerManager, _template);
+        await _tileInteractor.ProcessLanding(player, _template);
 
         if (player.CanPlay())
         {
@@ -95,7 +103,7 @@ public partial class Game : Spatial
         await player.Move(moveAmount);
         if (player.index <= initialIndex)
         {
-            player.money += 200; //TODO: load from template
+            player.Money += 200; //TODO: load from template
             Print("player ", player.id, " get start bonus");
         }
     }

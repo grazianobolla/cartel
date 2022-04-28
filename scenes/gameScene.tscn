@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://board/BoardGenerator.cs" type="Script" id=1]
 [ext_resource path="res://game/Game.cs" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://player/PlayerManager.cs" type="Script" id=4]
 [ext_resource path="res://debug/debugPanel/debugPanel.tscn" type="PackedScene" id=5]
 [ext_resource path="res://debug/debugInfo/DebugInfo.tscn" type="PackedScene" id=6]
+[ext_resource path="res://game/TileInteractor.cs" type="Script" id=7]
 
 [node name="Game" type="Spatial"]
 script = ExtResource( 2 )
@@ -16,6 +17,10 @@ _tileGroup = NodePath("../TileGroup")
 
 [node name="PlayerManager" type="Node" parent="."]
 script = ExtResource( 4 )
+
+[node name="TileInteractor" type="Node" parent="."]
+script = ExtResource( 7 )
+playerManagerPath = NodePath("../PlayerManager")
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( -0.0174525, 0.681898, -0.731244, 0, 0.731355, 0.682002, 0.999849, 0.0119026, -0.012764, -21.968, 16.2668, -0.513496 )

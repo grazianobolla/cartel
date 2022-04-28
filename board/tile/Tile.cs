@@ -19,14 +19,21 @@ public class Tile : Spatial
         UpdateVisual();
     }
 
+    public bool IsOwner(Player player)
+    {
+        //FIXME: what happens if the player loses connection and reconnects??
+        //the saved player will not be the same and this will not work:
+        return player == owner;
+    }
+
+    public int Group
+    {
+        get { return _data.group; }
+    }
+
     public int GetFee()
     {
         return _data.houses * 10;
-    }
-
-    public int GetGroup()
-    {
-        return _data.group;
     }
 
     public bool IsBuyable()
@@ -62,13 +69,6 @@ public class Tile : Spatial
         return true;
     }
 
-    public bool IsOwner(Player player)
-    {
-        //FIXME: what happens if the player loses connection and reconnects??
-        //the saved player will not be the same and this will not work:
-        return player == owner;
-    }
-
     private void UpdateText(String str)
     {
         GetNode<Label>("Viewport/Label").Text = str;
@@ -88,7 +88,7 @@ public class Tile : Spatial
             case Type.PROPERTY:
             case Type.STATE:
                 UpdateMesh(this.type == Type.PROPERTY ? Colors.Blue : Colors.Yellow);
-                UpdateText($"{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
+                UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
                 break;
 
             case Type.CORNER:
@@ -113,13 +113,21 @@ public class Tile : Spatial
     {
         if (ev is InputEventMouseButton eventButton)
         {
-            if (eventButton.IsPressed() && eventButton.ButtonIndex == (int)ButtonList.Left)
+            if (!eventButton.IsPressed())
+                return;
+
+            switch (eventButton.ButtonIndex)
             {
-                GetNode<Controller>("/root/Controller").SendDebugShakeMethod(index);
+                case (int)ButtonList.Left:
+                    GetNode<Controller>("/root/Controller").SendDebugShakeMethod(index);
+                    break;
+
+                case (int)ButtonList.Middle:
+                    GetNode<TextEdit>("/root/Game/DebugPanel/VBoxContainer/HBoxContainer2/TextEdit").Text = index.ToString();
+                    break;
             }
         }
     }
-
 }
 
 public struct TileData

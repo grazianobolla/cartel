@@ -3,31 +3,38 @@ using System.Collections.Generic;
 
 public static class Board
 {
-    private static List<Tile> s_boardList;
+    private static List<Tile> _boardList;
 
     public static void SetList(List<Tile> list)
     {
-        s_boardList = list;
+        _boardList = list;
     }
 
     public static int GetMovedIndex(int start, int steps)
     {
-        int size = s_boardList.Count;
+        int size = _boardList.Count;
         return (steps + start) % size;
     }
 
     public static Vector3 GetTilePos(int index)
     {
-        return s_boardList[GetMovedIndex(0, index)].GlobalTransform.origin;
+        return _boardList[GetMovedIndex(0, index)].GlobalTransform.origin;
     }
 
     public static Tile GetTile(int index)
     {
-        return s_boardList[GetMovedIndex(0, index)];
+        return _boardList[GetMovedIndex(0, index)];
     }
 
     public static int GetSize()
     {
-        return s_boardList.Count;
+        return _boardList.Count;
+    }
+
+    //TODO: maybe this can be improved by loading from template
+    public static int GetTileGroupCount(int checkGroup)
+    {
+        int count = _boardList.FindAll(tile => (tile.type == Tile.Type.PROPERTY && tile.Group == checkGroup)).Count;
+        return count;
     }
 }

@@ -5,12 +5,12 @@ using static Godot.GD;
 
 public class Player : Spatial
 {
-    public enum State { NONE, JAILED };
+    public enum State { PLAYING, JAILED };
 
     public int id { get; private set; } = 0;
     public int index { get; private set; } = 0;
     public List<Tile> ownedTiles { get; } = new List<Tile>();
-    public State state { get; private set; } = State.NONE;
+    public State state { get; private set; } = State.PLAYING;
     public int jailTime { get; private set; } = 0;
 
     private int _money = 0;
@@ -18,7 +18,7 @@ public class Player : Spatial
     public void Initialize(int id, int money)
     {
         this.id = id;
-        this.money = money;
+        this.Money = money;
         this.Translation = Board.GetTilePos(index);
     }
 
@@ -72,7 +72,13 @@ public class Player : Spatial
         return state != State.JAILED;
     }
 
-    public int money
+    public bool HasGroup(int group)
+    {
+        int count = ownedTiles.FindAll(tile => tile.Group == group).Count;
+        return count == Board.GetTileGroupCount(group);
+    }
+
+    public int Money
     {
         get { return _money; }
         set
@@ -80,13 +86,16 @@ public class Player : Spatial
             _money = value;
             //TODO: update controller label
             if (_money < 1)
-                Print("player ", id, "lost!");
+            {
+                Print("player ", id, " lost!");
+            }
         }
     }
 
     private async Task AnimateForward(int amount)
     {
         Tween tween = (Tween)GetNode("Tween");
+
         for (int i = 0; i < amount + 1; i++)
         {
             tween.InterpolateProperty(this, "translation", GlobalTransform.origin, Board.GetTilePos(index + i), .1f, Tween.TransitionType.Cubic);

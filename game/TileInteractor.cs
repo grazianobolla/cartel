@@ -1,22 +1,29 @@
 using System.Threading.Tasks;
+using Godot;
 using static Godot.GD;
 
-public class TileInteractor
+public class TileInteractor : Node
 {
+    [Export] private NodePath playerManagerPath;
+    private PlayerManager _playerManager;
+
+    public override void _Ready()
+    {
+        _playerManager = (PlayerManager)GetNode(playerManagerPath);
+    }
+
     //Called when a player interacts with the game (in his turn)
-    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Object data)
+    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Collections.Array data)
     {
         switch (action)
         {
             case Controller.Action.BUY:
-                if (BuyTile(player))
-                    return true;
-                break;
+                BuyTile(player, player.index);
+                return false;
 
             case Controller.Action.BUY_HOUSE:
-                if (BuyHouse(player))
-                    return true;
-                break;
+                BuyHouse(player, (int)data[0]);
+                return false;
 
             case Controller.Action.OMIT:
                 return true;
@@ -25,12 +32,10 @@ public class TileInteractor
                 PrintErr("unkown action");
                 return false;
         }
-
-        return false;
     }
 
     //Called when a player lands on a tile, this happens automatically
-    public async Task ProcessLanding(Player player, PlayerManager playerManager, GameTemplate template)
+    public async Task ProcessLanding(Player player, GameTemplate template)
     {
         Tile tile = Board.GetTile(player.index);
 
@@ -42,19 +47,19 @@ public class TileInteractor
                     return;
 
                 Print("landed on someones property, paying ", tile.GetFee());
-                playerManager.TransferMoney(player, tile.owner, tile.GetFee());
+                _playerManager.TransferMoney(player, tile.owner, tile.GetFee());
                 break;
 
             case Tile.Type.CHANCE:
                 var chanceData = template.GetRandomChanceData();
                 //TODO: show player message
-                Print("landed on chance tile (", chanceData.text, ")");
-                player.money += chanceData.cost;
+                Print("landed on chance tile cost: ", chanceData.cost);
+                player.Money += chanceData.cost;
                 break;
 
             case Tile.Type.CORNER:
                 //3 is always the jail corner
-                if (tile.GetGroup() != 3)
+                if (tile.Group != 3)
                     return;
 
                 int jailIndex = Board.GetSize() / 4;
@@ -67,9 +72,9 @@ public class TileInteractor
         }
     }
 
-    public bool BuyTile(Player player)
+    public bool BuyTile(Player player, int tileIndex)
     {
-        Tile tile = Board.GetTile(player.index);
+        Tile tile = Board.GetTile(tileIndex);
 
         if (!tile.IsBuyable())
         {
@@ -83,21 +88,22 @@ public class TileInteractor
             return false;
         }
 
-        if (player.money < tile.GetPrice())
+        if (player.Money < tile.GetPrice())
         {
             Print("you dont have enough money");
             return false;
         }
 
-        player.money -= tile.GetPrice();
+        player.Money -= tile.GetPrice();
         AssignTile(player, tile);
+
         Print("player ", player.id, " purchased tile ", tile.GetLabel(), " at ", tile.GetPrice());
         return true;
     }
 
-    public bool BuyHouse(Player player)
+    public bool BuyHouse(Player player, int tileIndex)
     {
-        Tile tile = Board.GetTile(player.index);
+        Tile tile = Board.GetTile(tileIndex);
         int price = tile.GetHousePrice();
 
         if (tile.type != Tile.Type.PROPERTY)
@@ -112,14 +118,21 @@ public class TileInteractor
             return false;
         }
 
-        if (player.money < price)
+        if (player.Money < price)
         {
             Print("you dont have enough money");
+            return false;
+        }
+
+        if (!player.HasGroup(tile.Group))
+        {
+            Print("you dont have a full tile group yet");
+            return false;
         }
 
         if (tile.AddHouse())
         {
-            player.money -= price;
+            player.Money -= price;
             return true;
         }
 
@@ -130,7 +143,9 @@ public class TileInteractor
     private void AssignTile(Player player, Tile tile)
     {
         if (tile.owner != null)
+        {
             tile.owner.RemoveTile(tile);
+        }
 
         tile.owner = player;
         player.AddTile(tile);
