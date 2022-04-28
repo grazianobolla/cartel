@@ -8,7 +8,7 @@ bottom_radius = 0.5
 height = 1.0
 
 [sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0.937255, 0.305882, 0.305882, 1 )
+resource_local_to_scene = true
 
 [node name="Player" type="Spatial"]
 script = ExtResource( 1 )

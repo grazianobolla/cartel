@@ -20,6 +20,7 @@ public class Player : Spatial
         this.id = id;
         this.Money = money;
         this.Translation = Board.GetTilePos(index);
+        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", Utils.GetRandomColor());
     }
 
     public async Task Move(int amount)
@@ -65,6 +66,14 @@ public class Player : Spatial
         jailTime = 3;
         state = State.JAILED;
         await MoveTo(jailTileIndex);
+    }
+
+    public void ReduceJail(int turns)
+    {
+        jailTime = Mathf.Max(jailTime - turns, 0);
+
+        if (jailTime <= 0)
+            state = State.PLAYING;
     }
 
     public bool CanPlay()

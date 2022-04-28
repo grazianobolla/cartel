@@ -71,6 +71,8 @@ public partial class Game : Spatial
         if (currentState != State.WAITING)
             return;
 
+        _playerManager.CheckTurn();
+
         //Should not happen
         if (!player.CanPlay())
             return;

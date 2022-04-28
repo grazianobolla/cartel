@@ -34,4 +34,13 @@ public class PlayerManager : Node
         from.Money -= amount;
         to.Money += amount;
     }
+
+    public void CheckTurn()
+    {
+        foreach (Player player in playersList)
+        {
+            if (player.state == Player.State.JAILED)
+                player.ReduceJail(1);
+        }
+    }
 }

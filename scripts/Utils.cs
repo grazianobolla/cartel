@@ -25,4 +25,10 @@ public static class Utils
         parent.AddChild(model);
         return model;
     }
+
+    public static Color GetRandomColor()
+    {
+        Color color = new Color(GD.Randf(), GD.Randf(), GD.Randf());
+        return color;
+    }
 }
