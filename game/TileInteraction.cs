@@ -1,10 +1,9 @@
-using Godot;
 using System.Threading.Tasks;
 using static Godot.GD;
 
-public partial class GameLogic : Spatial
+public class TileInteraction
 {
-    public async Task ProcessLanding(Player player)
+    public async Task ProcessLanding(Player player, PlayerManager playerManager, GameTemplate template)
     {
         Tile tile = Board.GetTile(player.index);
 
@@ -16,11 +15,11 @@ public partial class GameLogic : Spatial
                     return;
 
                 Print("landed on someones property, paying ", tile.GetFee());
-                _playerManager.TransferMoney(player, tile.owner, tile.GetFee());
+                playerManager.TransferMoney(player, tile.owner, tile.GetFee());
                 break;
 
             case Tile.Type.CHANCE:
-                var chanceData = _template.GetRandomChanceData();
+                var chanceData = template.GetRandomChanceData();
                 //TODO: show player message
                 Print("landed on chance tile (", chanceData.text, ")");
                 player.money += chanceData.cost;

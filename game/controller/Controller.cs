@@ -1,12 +1,11 @@
 using Godot;
 using System;
 
+//TODO: remove debug stuff here
 public class Controller : Node
 {
-    [Signal]
-    public delegate void OnAction(int playerId, Instruction instruction);
-    [Signal]
-    public delegate void DebugShake(int index);
+    [Signal] public delegate void OnAction(int playerId, Instruction instruction);
+    [Signal] public delegate void DebugShake(int index);
 
     public enum Instruction { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
 
@@ -19,16 +18,16 @@ public class Controller : Node
 
     private void ConnectAirConsole()
     {
-        _airconsole = (AirConsole)GetNode("/root/AirConsole");
+        _airconsole = (AirConsole)GetNode("AirConsole");
 
         if (!_airconsole.ready)
             return;
 
-        _airconsole.Connect("OnMessage", this, "AirconsoleControllerMessage");
+        _airconsole.Connect("OnMessage", this, "OnAirconsoleControllerMessage");
         _airconsole.SetActivePlayers(2); //TODO: this
     }
 
-    private void AirconsoleControllerMessage(int playerNumber, Godot.Object data)
+    private void OnAirconsoleControllerMessage(int playerNumber, Godot.Object data)
     {
         string str = (string)data.Get("instruction");
         Instruction instruction = Instruction.NONE;
@@ -37,12 +36,12 @@ public class Controller : Node
             EmitSignal(nameof(OnAction), playerNumber, instruction);
     }
 
-    public void DebugControllerMessage(int playerNumber, Instruction instruction)
+    public void SendDebugControllerMessage(int playerNumber, Instruction instruction)
     {
         EmitSignal(nameof(OnAction), playerNumber, instruction);
     }
 
-    public void DebugShakeMethod(int index)
+    public void SendDebugShakeMethod(int index)
     {
         EmitSignal(nameof(DebugShake), index);
     }

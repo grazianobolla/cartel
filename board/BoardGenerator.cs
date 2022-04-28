@@ -5,18 +5,19 @@ using static Godot.GD;
 
 public class BoardGenerator : Node
 {
+    [Export] private NodePath _tileGroup;
     private List<Tile> _boardList = new List<Tile>();
 
-    public void GenerateFromTemplate(GameTemplate templ)
+    public void GenerateFromTemplate(GameTemplate template)
     {
-        InstanceBoard(templ.GetSideCount(), "res://board/tile/tile.tscn", 3, (Spatial)GetNode("/root/GameLogic/TileGroup"));
+        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", 3, (Spatial)GetNode(_tileGroup));
         FillBoardTypes
         (
-            templ.GetTileCount(Tile.Type.PROPERTY),
-            templ.GetTileCount(Tile.Type.STATE),
-            templ.GetTileCount(Tile.Type.CHANCE)
+            template.GetTileCount(Tile.Type.PROPERTY),
+            template.GetTileCount(Tile.Type.STATE),
+            template.GetTileCount(Tile.Type.CHANCE)
         );
-        FillBoard(templ.GenerateDataList(_boardList));
+        FillBoard(template.GenerateDataList(_boardList));
 
         Board.SetList(_boardList);
     }

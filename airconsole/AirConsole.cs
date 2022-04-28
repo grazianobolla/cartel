@@ -5,10 +5,8 @@ using static Godot.GD;
 
 public class AirConsole : Node
 {
-    [Signal]
-    public delegate void OnMessage(int deviceId, Godot.Object data);
-    [Signal]
-    public delegate void OnConnect(int deviceId);
+    [Signal] public delegate void OnMessage(int deviceId, Godot.Object data);
+    [Signal] public delegate void OnConnect(int deviceId);
 
     public bool ready = false;
 

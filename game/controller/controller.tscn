@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/controller/Controller.cs" type="Script" id=1]
+[ext_resource path="res://airconsole/AirConsole.cs" type="Script" id=2]
+
+[node name="Controller" type="Node"]
+script = ExtResource( 1 )
+
+[node name="AirConsole" type="Node" parent="."]
+script = ExtResource( 2 )
