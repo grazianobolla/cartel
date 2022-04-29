@@ -93,7 +93,8 @@ public class Player : Spatial
         set
         {
             _money = value;
-            //TODO: update controller label
+            //TODO: move somewhere else, call signal instead
+            GetNode<Controller>("/root/Controller").UpdateMoneyLabel(id, _money);
             if (_money < 1)
             {
                 Print("player ", id, " lost!");

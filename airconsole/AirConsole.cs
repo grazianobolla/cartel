@@ -35,9 +35,21 @@ public class AirConsole : Node
         return (int)playerNumber;
     }
 
+    public int ConvertPlayerNumberToDeviceId(int playerId)
+    {
+        object playerNumber = _airconsole.Call("convertPlayerNumberToDeviceId", playerId);
+        return (int)playerNumber;
+    }
+
+
     public void SetActivePlayers(int maxPlayers)
     {
         _airconsole.Call("setActivePlayers", maxPlayers);
+    }
+
+    public void Message(int deviceId, JavaScriptObject obj)
+    {
+        _airconsole.Call("message", deviceId, obj);
     }
 
     private void ConnectCallbacks()

@@ -21,16 +21,14 @@ public class TileInteractor : Node
                 BuyTile(player, player.index);
                 return false;
 
-            //[index]
+            //[tileIndex]
             case Controller.Action.BUY_HOUSE:
-                if (arguments[0] == null)
-                    return false;
+                if (arguments[0] != null)
+                    BuyHouse(player, (int)arguments[0]);
 
-                BuyHouse(player, (int)arguments[0]);
                 return false;
 
             case Controller.Action.OMIT:
-                Print(arguments);
                 return true;
 
             default:

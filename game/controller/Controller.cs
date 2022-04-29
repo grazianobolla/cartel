@@ -40,6 +40,14 @@ public class Controller : Node
         EmitSignal(nameof(OnAction), playerNumber, action, arguments);
     }
 
+    public void UpdateMoneyLabel(int playerId, int value)
+    {
+        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
+        data.Set("instruction", "update-money");
+        data.Set("content", value);
+        _airconsole.Message(_airconsole.ConvertPlayerNumberToDeviceId(playerId), data);
+    }
+
     public void SetActivePlayers(int amount)
     {
         _airconsole.SetActivePlayers(amount);
