@@ -13,7 +13,7 @@ public class TileInteractor : Node
     }
 
     //Called when a player interacts with the game (in his turn)
-    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Collections.Array data)
+    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Collections.Array arguments)
     {
         switch (action)
         {
@@ -21,11 +21,16 @@ public class TileInteractor : Node
                 BuyTile(player, player.index);
                 return false;
 
+            //[index]
             case Controller.Action.BUY_HOUSE:
-                BuyHouse(player, (int)data[0]);
+                if (arguments[0] == null)
+                    return false;
+
+                BuyHouse(player, (int)arguments[0]);
                 return false;
 
             case Controller.Action.OMIT:
+                Print(arguments);
                 return true;
 
             default:

@@ -77,8 +77,7 @@ public class Tile : Spatial
 
     private void UpdateMesh(Color color)
     {
-        Material material = GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0);
-        material.Set("albedo_color", color);
+        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
     private void UpdateVisual()

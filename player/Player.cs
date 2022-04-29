@@ -20,7 +20,7 @@ public class Player : Spatial
         this.id = id;
         this.Money = money;
         this.Translation = Board.GetTilePos(index);
-        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", Utils.GetRandomColor());
+        UpdateMesh(Utils.GetRandomColor());
     }
 
     public async Task Move(int amount)
@@ -99,6 +99,11 @@ public class Player : Spatial
                 Print("player ", id, " lost!");
             }
         }
+    }
+
+    public void UpdateMesh(Color color)
+    {
+        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
     private async Task AnimateForward(int amount)

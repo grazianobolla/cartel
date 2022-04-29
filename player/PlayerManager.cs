@@ -14,6 +14,9 @@ public class PlayerManager : Node
         AddChild(player);
         playersList.Add(player);
         player.Initialize(playersList.Count - 1, startingMoney);
+
+        //TODO: remove!
+        GetNode<Controller>("/root/Controller").SetActivePlayers(playersList.Count);
     }
 
     public int GetNextId(int currentId)

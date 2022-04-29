@@ -1,11 +1,10 @@
 using Godot;
 using System;
-using Godot.Collections;
 
 //TODO: remove debug stuff here
 public class Controller : Node
 {
-    [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Object data);
+    [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Collections.Array arguments);
     [Signal] public delegate void DebugShake(int index);
 
     public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
@@ -25,16 +24,25 @@ public class Controller : Node
             return;
 
         _airconsole.Connect("OnMessage", this, "OnAirconsoleControllerMessage");
-        _airconsole.SetActivePlayers(8); //TODO: .
     }
 
-    private void OnAirconsoleControllerMessage(int playerNumber, Godot.Object data)
+    private void OnAirconsoleControllerMessage(int playerNumber, Godot.JavaScriptObject data)
     {
-        string str = (string)data.Get("instruction");
-        Action action = Action.NONE;
+        var argumentArray = data.ToArray();
 
-        if (Enum.TryParse<Action>(str, out action))
-            EmitSignal(nameof(OnAction), playerNumber, action, null);
+        string actionStr = (string)argumentArray[0];
+        Action action = Action.NONE;
+        if (!Enum.TryParse<Action>(actionStr, out action))
+            return;
+
+        var arguments = data.GetAllButFirst().ToArray();
+
+        EmitSignal(nameof(OnAction), playerNumber, action, arguments);
+    }
+
+    public void SetActivePlayers(int amount)
+    {
+        _airconsole.SetActivePlayers(amount);
     }
 
     public void SendDebugControllerMessage(int playerNumber, Action instruction, Godot.Collections.Array data)

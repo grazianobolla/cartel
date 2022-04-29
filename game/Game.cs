@@ -28,6 +28,7 @@ public partial class Game : Spatial
     private void ConnectSignals()
     {
         GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
+        //TODO: remove
         GetNode("/root/Controller").Connect("DebugShake", this, nameof(OnDebugShake));
     }
 
@@ -42,7 +43,7 @@ public partial class Game : Spatial
     }
 
     //Called when a player requests an interaction with the game
-    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array data)
+    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array arguments)
     {
         if (currentPlayerId != playerId)
             return;
@@ -57,7 +58,7 @@ public partial class Game : Spatial
                 if (currentState != State.INTERACTING)
                     return;
 
-                if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, data))
+                if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
                     EmitSignal(nameof(FinishedInteraction));
 
                 break;
@@ -72,10 +73,6 @@ public partial class Game : Spatial
             return;
 
         _playerManager.CheckTurn();
-
-        //Should not happen
-        if (!player.CanPlay())
-            return;
 
         currentState = State.MOVING;
         await MoveState(player, diceNumber);
