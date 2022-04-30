@@ -1,6 +1,6 @@
 using Godot;
 
-public static class Js
+public static class JavascriptInterface
 {
     public static int GetArraySize(this JavaScriptObject jsArray)
     {

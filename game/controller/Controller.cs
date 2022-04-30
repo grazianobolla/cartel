@@ -28,20 +28,25 @@ public class Controller : Node
 
     private void OnAirconsoleControllerMessage(int playerNumber, Godot.JavaScriptObject data)
     {
-        var argumentArray = data.ToArray();
+        Godot.Collections.Array argumentArray = data.ToArray();
 
         string actionStr = (string)argumentArray[0];
         Action action = Action.NONE;
         if (!Enum.TryParse<Action>(actionStr, out action))
             return;
 
-        var arguments = data.GetAllButFirst().ToArray();
+        //remove instruction and leave only instruction arguments
+        argumentArray.RemoveAt(0);
 
-        EmitSignal(nameof(OnAction), playerNumber, action, arguments);
+        EmitSignal(nameof(OnAction), playerNumber, action, argumentArray);
     }
 
+    //TODO: move this to a specific AirConsole interface
     public void UpdateMoneyLabel(int playerId, int value)
     {
+        if (!_airconsole.ready)
+            return;
+
         JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
         data.Set("instruction", "update-money");
         data.Set("content", value);

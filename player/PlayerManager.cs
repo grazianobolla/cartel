@@ -10,13 +10,13 @@ public class PlayerManager : Node
 
     public void AddPlayer(int startingMoney)
     {
+        //TODO: remove! change for signal
+        //GetNode<Controller>("/root/Controller").SetActivePlayers(playersList.Count + 1);
+
         Player player = (Player)_playerScene.Instance();
         AddChild(player);
         playersList.Add(player);
         player.Initialize(playersList.Count - 1, startingMoney);
-
-        //TODO: remove!
-        GetNode<Controller>("/root/Controller").SetActivePlayers(playersList.Count);
     }
 
     public int GetNextId(int currentId)

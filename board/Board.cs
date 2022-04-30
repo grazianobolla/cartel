@@ -4,10 +4,12 @@ using System.Collections.Generic;
 public static class Board
 {
     private static List<Tile> _boardList;
+    public static int boardSize { get; private set; }
 
-    public static void SetList(List<Tile> list)
+    public static void SetBoardList(List<Tile> list)
     {
         _boardList = list;
+        boardSize = _boardList.Count;
     }
 
     public static int GetMovedIndex(int start, int steps)
@@ -16,19 +18,14 @@ public static class Board
         return (steps + start) % size;
     }
 
-    public static Vector3 GetTilePos(int index)
-    {
-        return _boardList[GetMovedIndex(0, index)].GlobalTransform.origin;
-    }
-
     public static Tile GetTile(int index)
     {
         return _boardList[GetMovedIndex(0, index)];
     }
 
-    public static int GetSize()
+    public static Transform GetTileTransform(int index)
     {
-        return _boardList.Count;
+        return _boardList[GetMovedIndex(0, index)].GlobalTransform;
     }
 
     //TODO: maybe this can be improved by loading from template

@@ -4,7 +4,7 @@ using static Godot.GD;
 
 public class TileInteractor : Node
 {
-    [Export] private NodePath playerManagerPath;
+    [Export] private NodePath playerManagerPath = null;
     private PlayerManager _playerManager;
 
     public override void _Ready()
@@ -65,7 +65,7 @@ public class TileInteractor : Node
                 if (tile.Group != 3)
                     return;
 
-                int jailIndex = Board.GetSize() / 4;
+                int jailIndex = Board.boardSize / 4;
                 await player.Jail(jailIndex);
                 break;
 

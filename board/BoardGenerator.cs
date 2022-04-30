@@ -5,7 +5,7 @@ using static Godot.GD;
 
 public class BoardGenerator : Node
 {
-    [Export] private NodePath _tileGroup;
+    [Export] private NodePath _tileGroup = null;
     private List<Tile> _boardList = new List<Tile>();
 
     public void GenerateFromTemplate(GameTemplate template)
@@ -19,7 +19,7 @@ public class BoardGenerator : Node
         );
         FillBoard(template.GenerateDataList(_boardList));
 
-        Board.SetList(_boardList);
+        Board.SetBoardList(_boardList);
     }
 
     private void InstanceBoard(int sideLenght, String tileModelPath, int tileGap, Spatial parent)

@@ -19,7 +19,7 @@ public class Player : Spatial
     {
         this.id = id;
         this.Money = money;
-        this.Translation = Board.GetTilePos(index);
+        this.Translation = Board.GetTileTransform(index).origin;
         UpdateMesh(Utils.GetRandomColor());
     }
 
@@ -35,7 +35,7 @@ public class Player : Spatial
         if (toIndex >= index)
             return toIndex - index;
 
-        return (int)(Board.GetSize() - (index - toIndex));
+        return (int)(Board.boardSize - (index - toIndex));
     }
 
     public async Task MoveTo(int toIndex)
@@ -93,7 +93,7 @@ public class Player : Spatial
         set
         {
             _money = value;
-            //TODO: move somewhere else, call signal instead
+            //TODO: move somewhere else (maybe Game.cs), call signal instead
             GetNode<Controller>("/root/Controller").UpdateMoneyLabel(id, _money);
             if (_money < 1)
             {
@@ -107,15 +107,19 @@ public class Player : Spatial
         GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
-    private async Task AnimateForward(int amount)
+    private async Task AnimateForward(int amount, float stepTime = .1f)
     {
-        Tween tween = (Tween)GetNode("Tween");
+        TransformInterpolator ti = (TransformInterpolator)GetNode("TransformInterpolator");
 
         for (int i = 0; i < amount + 1; i++)
         {
-            tween.InterpolateProperty(this, "translation", GlobalTransform.origin, Board.GetTilePos(index + i), .1f, Tween.TransitionType.Cubic);
-            tween.Start();
-            await ToSignal(tween, "tween_completed");
+            int tileIndex = index + i;
+
+            Transform target = Board.GetTileTransform(tileIndex);
+            ti.InterpolateTransform(this, target);
+            ti.Start(stepTime);
+
+            await ToSignal(ti, "FinishedInterpolation");
         }
     }
 }
