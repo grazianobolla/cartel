@@ -52,7 +52,7 @@ public class GameTemplate
         return ((String)data["text"], (int)data["cost"]);
     }
 
-    //TODO: clean up this function
+    //TODO: clean up the hell out of ths!
     public List<TileData> GenerateDataList(List<Tile> boardList)
     {
         List<TileData> dataList = new List<TileData>();
@@ -61,6 +61,8 @@ public class GameTemplate
         propertyCount = groupCount = stateCount = cornerCount = 0;
 
         var properties = _template["properties"];
+        Godot.Color groupColor = Utils.GetRandomColor();
+        groupColor.s = 1;
 
         foreach (Tile tile in boardList)
         {
@@ -69,7 +71,7 @@ public class GameTemplate
                 case Tile.Type.PROPERTY:
                     {
                         var info = properties["normal"][groupCount][propertyCount];
-                        TileData data = new TileData((String)info["label"], (int)info["price"], groupCount);
+                        TileData data = new TileData((String)info["label"], (int)info["price"], groupCount, groupColor);
                         dataList.Add(data);
 
                         int groupSize = ((JArray)properties["normal"][groupCount]).Count - 1;
@@ -77,6 +79,8 @@ public class GameTemplate
                         if (propertyCount >= groupSize)
                         {
                             groupCount = (groupCount + 1) % ((JArray)properties["normal"]).Count;
+                            groupColor = Utils.GetRandomColor();
+                            groupColor.s = 1;
                         }
 
                         //TODO: magic num
@@ -86,20 +90,20 @@ public class GameTemplate
                 case Tile.Type.STATE:
                     {
                         var info = properties["state"][stateCount];
-                        TileData data = new TileData((String)info["label"], (int)info["price"], stateCount);
+                        TileData data = new TileData((String)info["label"], (int)info["price"], stateCount, Godot.Colors.Black);
                         dataList.Add(data);
                         stateCount = (stateCount + 1) % GetTileCount(Tile.Type.STATE);
                         break;
                     }
                 case Tile.Type.CHANCE:
                     {
-                        dataList.Add(new TileData("Chance", 0, 0));
+                        dataList.Add(new TileData("Chance", 0, 0, Godot.Colors.Black));
                         break;
                     }
 
                 case Tile.Type.CORNER:
                     {
-                        dataList.Add(new TileData("Corner", 0, cornerCount));
+                        dataList.Add(new TileData("Corner", 0, cornerCount, Godot.Colors.Black));
                         cornerCount += 1;
                         break;
                     }

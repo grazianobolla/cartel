@@ -106,7 +106,8 @@ public partial class Game : Spatial
         await player.Move(moveAmount);
         if (player.index <= initialIndex)
         {
-            player.Money += 200; //TODO: load from template
+            //TODO: load from template
+            player.Money += 200;
             Print("player ", player.id, " get start bonus");
         }
     }

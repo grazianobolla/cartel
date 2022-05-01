@@ -5,15 +5,17 @@ public struct TileData
 {
     public String label { get; }
     public int price { get; }
-    public int group { get; }
     public int houses { get; set; }
+    public int group { get; }
+    public Color color { get; }
 
-    public TileData(String label, int price, int group)
+    public TileData(String label, int price, int group, Color color)
     {
         this.label = label;
         this.price = price;
-        this.group = group;
         this.houses = 0;
+        this.group = group;
+        this.color = color;
     }
 }
 
@@ -74,11 +76,15 @@ public class Tile : Spatial
 
     public bool AddHouse()
     {
+        if (type != Type.PROPERTY)
+            return false;
+
         if (_data.houses >= MAX_HOUSE_COUNT)
             return false;
 
         _data.houses += 1;
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
+        //TODO: magic numbers!
         houseModel.Translate(new Vector3((float)GD.RandRange(0.7, -0.7), 0, -1));
         UpdateVisual();
 
@@ -102,24 +108,21 @@ public class Tile : Spatial
         switch (this.type)
         {
             case Type.PROPERTY:
-                UpdateGroupMesh(Colors.Blue);
+                UpdateGroupMesh(_data.color);
                 UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
-                GetNode<MeshInstance>("TileMesh").Visible = true;
                 break;
 
             case Type.STATE:
                 UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}");
-                GetNode<MeshInstance>("TileMesh").Visible = true;
                 break;
 
             case Type.CORNER:
                 UpdateText($"{_data.group}");
-                GetNode<MeshInstance>("CornerMesh").Visible = true;
+                GetNode<MeshInstance>("Mesh").Mesh.Set("size", new Vector3(3, 0.25f, 3));
                 break;
 
             case Type.CHANCE:
                 UpdateText($"{_data.label}");
-                GetNode<MeshInstance>("TileMesh").Visible = true;
                 break;
 
             case Type.NONE:

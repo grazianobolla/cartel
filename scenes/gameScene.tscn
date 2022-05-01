@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://board/BoardGenerator.cs" type="Script" id=1]
 [ext_resource path="res://game/Game.cs" type="Script" id=2]
@@ -8,6 +8,12 @@
 [ext_resource path="res://debug/debugInfo/DebugInfo.tscn" type="PackedScene" id=6]
 [ext_resource path="res://game/TileInteractor.cs" type="Script" id=7]
 [ext_resource path="res://scripts/freelookCamera.gd" type="Script" id=8]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 40, 1, 40 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.345098, 0.74902, 0.388235, 1 )
 
 [node name="Game" type="Spatial"]
 script = ExtResource( 2 )
@@ -30,9 +36,12 @@ transform = Transform( -4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37
 current = false
 
 [node name="Camera2" type="Camera" parent="."]
+transform = Transform( -0.325568, 0.656815, -0.680149, 0, 0.71934, 0.694661, 0.945521, 0.226159, -0.234194, -17.7721, 1.15769, 16.8001 )
 current = true
 script = ExtResource( 8 )
-sensitivity = 1.0
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="DebugInfo" parent="." instance=ExtResource( 6 )]
 _gamePath = NodePath("..")
@@ -40,3 +49,13 @@ _playerManagerPath = NodePath("../PlayerManager")
 _cameraPath = NodePath("../GameCamera")
 
 [node name="DebugPanel" parent="." instance=ExtResource( 5 )]
+
+[node name="PlatformMesh" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, -0.5, 0.866025, 0, -0.866025, -0.5, 0, 9, 0 )
+shadow_enabled = true
+directional_shadow_mode = 0
