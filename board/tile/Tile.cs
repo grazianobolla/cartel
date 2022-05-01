@@ -1,6 +1,22 @@
 using Godot;
 using System;
 
+public struct TileData
+{
+    public String label { get; }
+    public int price { get; }
+    public int group { get; }
+    public int houses { get; set; }
+
+    public TileData(String label, int price, int group)
+    {
+        this.label = label;
+        this.price = price;
+        this.group = group;
+        this.houses = 0;
+    }
+}
+
 public class Tile : Spatial
 {
     private const int MAX_HOUSE_COUNT = 4;
@@ -75,9 +91,10 @@ public class Tile : Spatial
         GetNode<Viewport>("Viewport").UpdateViewport();
     }
 
-    private void UpdateMesh(Color color)
+    private void UpdateGroupMesh(Color color)
     {
-        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
+        GetNode<MeshInstance>("GroupMesh").Visible = true;
+        GetNode<MeshInstance>("GroupMesh").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
     private void UpdateVisual()
@@ -85,19 +102,24 @@ public class Tile : Spatial
         switch (this.type)
         {
             case Type.PROPERTY:
-            case Type.STATE:
-                UpdateMesh(this.type == Type.PROPERTY ? Colors.Blue : Colors.Yellow);
+                UpdateGroupMesh(Colors.Blue);
                 UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
+                GetNode<MeshInstance>("TileMesh").Visible = true;
+                break;
+
+            case Type.STATE:
+                UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}");
+                GetNode<MeshInstance>("TileMesh").Visible = true;
                 break;
 
             case Type.CORNER:
-                UpdateMesh(Colors.Magenta);
                 UpdateText($"{_data.group}");
+                GetNode<MeshInstance>("CornerMesh").Visible = true;
                 break;
 
             case Type.CHANCE:
-                UpdateMesh(Colors.White);
                 UpdateText($"{_data.label}");
+                GetNode<MeshInstance>("TileMesh").Visible = true;
                 break;
 
             case Type.NONE:
@@ -126,21 +148,5 @@ public class Tile : Spatial
                     break;
             }
         }
-    }
-}
-
-public struct TileData
-{
-    public String label { get; }
-    public int price { get; }
-    public int group { get; }
-    public int houses { get; set; }
-
-    public TileData(String label, int price, int group)
-    {
-        this.label = label;
-        this.price = price;
-        this.group = group;
-        this.houses = 0;
     }
 }

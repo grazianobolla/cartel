@@ -52,6 +52,7 @@ public class GameTemplate
         return ((String)data["text"], (int)data["cost"]);
     }
 
+    //TODO: clean up this function
     public List<TileData> GenerateDataList(List<Tile> boardList)
     {
         List<TileData> dataList = new List<TileData>();

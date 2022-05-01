@@ -5,6 +5,7 @@ public class CameraController : Camera
 {
     [Export] private Vector3 _overviewTarget = new Vector3(0, 55, 0);
     [Export] private float _overviewFOV = 35;
+    [Export] private Vector3 _focusOffset = new Vector3(-10, 10, 0);
     [Export] private float _focusFOV = 50;
 
     public enum State { OVERVIEW, FOCUSING };
@@ -32,9 +33,8 @@ public class CameraController : Camera
             case State.FOCUSING:
                 {
                     Vector3 targetPos = _playerTarget.GlobalTransform.origin;
-
                     Transform targetTransform = this.GlobalTransform;
-                    targetTransform.origin = targetPos + new Vector3(-10, 10, 0);
+                    targetTransform.origin = targetPos + _focusOffset;
                     targetTransform = targetTransform.LookingAt(targetPos, Vector3.Up);
 
                     this.Transform = this.Transform.InterpolateWith(targetTransform, weight);
@@ -52,17 +52,21 @@ public class CameraController : Camera
 
     }
 
-    public void Overview(float weight = 5)
+    public async void Overview(float weight = 3, float delay = 0)
     {
-        currentState = State.OVERVIEW;
+        await ToSignal(GetTree().CreateTimer(delay), "timeout");
+
         _weight = weight;
+        currentState = State.OVERVIEW;
     }
 
-    public void FocusPlayer(Spatial player, float weight = 5)
+    public async void FocusPlayer(Spatial player, float weight = 3, float delay = 0)
     {
-        currentState = State.FOCUSING;
+        await ToSignal(GetTree().CreateTimer(delay), "timeout");
+
         _playerTarget = player;
         _weight = weight;
+        currentState = State.FOCUSING;
     }
 
     private Transform GetOverviewTransform()

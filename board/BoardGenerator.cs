@@ -10,7 +10,7 @@ public class BoardGenerator : Node
 
     public void GenerateFromTemplate(GameTemplate template)
     {
-        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", 3, (Spatial)GetNode(_tileGroup));
+        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), 3.3f);
         FillBoardTypes
         (
             template.GetTileCount(Tile.Type.PROPERTY),
@@ -22,7 +22,7 @@ public class BoardGenerator : Node
         Board.SetBoardList(_boardList);
     }
 
-    private void InstanceBoard(int sideLenght, String tileModelPath, int tileGap, Spatial parent)
+    private void InstanceBoard(int sideLenght, String tileModelPath, Spatial parent, float tileSize)
     {
         sideLenght += 1;
 
@@ -35,9 +35,11 @@ public class BoardGenerator : Node
         for (int i = 0; i < sideLenght * 4; i++)
         {
             Spatial tile = (Spatial)tileScene.Instance();
-            tile.Translate(pos + dir * tileGap * (i > 0 ? 1 : 0));
-            tile.Rotate(Vector3.Up, -(Mathf.Pi / 2) * (int)(i / sideLenght + 1));
 
+            //Rotate and place tile in place.
+            int filter = (i > 0 ? 1 : 0);
+            tile.Translate(pos + dir * tileSize * filter);
+            tile.RotateY(-(Mathf.Pi / 2) * (int)(i / sideLenght + 1));
             pos = tile.Translation;
 
             _boardList.Add(tile as Tile);
@@ -47,7 +49,7 @@ public class BoardGenerator : Node
                 dir = dir.Rotated(Vector3.Up, -Mathf.Pi / 2);
         }
 
-        parent.Translate(new Vector3(-sideLenght * tileGap, 0, sideLenght * tileGap) / 2);
+        parent.Translate(new Vector3(-sideLenght * tileSize, 0, sideLenght * tileSize) / 2);
     }
 
     private void FillBoardTypes(int propertyCount, int stateCount, int chanceCount)
@@ -84,36 +86,21 @@ public class BoardGenerator : Node
         }
     }
 
-    private List<Tile.Type> GenerateTileArray(int propertyCount, int stateCount, int chanceCount)
+    private Godot.Collections.Array<Tile.Type> GenerateTileArray(int propertyCount, int stateCount, int chanceCount)
     {
-        List<Tile.Type> typeList = new List<Tile.Type>();
+        Godot.Collections.Array<Tile.Type> typeArray = new Godot.Collections.Array<Tile.Type>();
 
         for (int i = 0; i < propertyCount; i++)
-            typeList.Add(Tile.Type.PROPERTY);
+            typeArray.Add(Tile.Type.PROPERTY);
 
         for (int i = 0; i < stateCount; i++)
-            typeList.Add(Tile.Type.STATE);
+            typeArray.Add(Tile.Type.STATE);
 
         for (int i = 0; i < chanceCount; i++)
-            typeList.Add(Tile.Type.CHANCE);
+            typeArray.Add(Tile.Type.CHANCE);
 
-        ShuffleArray(typeList);
+        typeArray.Shuffle();
 
-        return typeList;
-    }
-
-    private void ShuffleArray<T>(List<T> array)
-    {
-        //TODO: check this function
-        var rng = new Random();
-
-        int n = array.Count - 1;
-        while (n > 1)
-        {
-            int k = rng.Next(n--);
-            T temp = array[n];
-            array[n] = array[k];
-            array[k] = temp;
-        }
+        return typeArray;
     }
 }
