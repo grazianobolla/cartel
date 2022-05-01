@@ -14,11 +14,13 @@ public partial class Game : Spatial
     private GameTemplate _template;
     private PlayerManager _playerManager;
     private TileInteractor _tileInteractor;
+    private CameraController _camera;
 
     public override void _Ready()
     {
         _tileInteractor = (TileInteractor)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
+        _camera = (CameraController)GetNode("GameCamera");
 
         Randomize();
         CreateGame();
@@ -74,6 +76,7 @@ public partial class Game : Spatial
 
         _playerManager.CheckTurn();
 
+        _camera.FocusPlayer(player);
         currentState = State.MOVING;
         await MoveState(player, diceNumber);
 
@@ -82,6 +85,7 @@ public partial class Game : Spatial
 
         if (player.CanPlay())
         {
+            _camera.Overview();
             currentState = State.INTERACTING;
             await ToSignal(this, nameof(FinishedInteraction));
         }

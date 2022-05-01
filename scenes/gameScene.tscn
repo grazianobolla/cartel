@@ -2,7 +2,7 @@
 
 [ext_resource path="res://board/BoardGenerator.cs" type="Script" id=1]
 [ext_resource path="res://game/Game.cs" type="Script" id=2]
-[ext_resource path="res://camera/Camera.tscn" type="PackedScene" id=3]
+[ext_resource path="res://camera/GameCamera.tscn" type="PackedScene" id=3]
 [ext_resource path="res://player/PlayerManager.cs" type="Script" id=4]
 [ext_resource path="res://debug/debugPanel/debugPanel.tscn" type="PackedScene" id=5]
 [ext_resource path="res://debug/debugInfo/DebugInfo.tscn" type="PackedScene" id=6]
@@ -15,6 +15,7 @@ script = ExtResource( 2 )
 [node name="DebugInfo" parent="." instance=ExtResource( 6 )]
 _gamePath = NodePath("..")
 _playerManagerPath = NodePath("../PlayerManager")
+_cameraPath = NodePath("../GameCamera")
 
 [node name="DebugPanel" parent="." instance=ExtResource( 5 )]
 
@@ -29,11 +30,12 @@ script = ExtResource( 4 )
 script = ExtResource( 7 )
 playerManagerPath = NodePath("../PlayerManager")
 
-[node name="Camera" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 0.133415, 0.99106, 0, -0.99106, 0.133415, -22.1045, 72.3033, 62.3692 )
-
 [node name="TileGroup" type="Spatial" parent="."]
 
+[node name="GameCamera" parent="." instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 30, 0 )
+
 [node name="Camera2" type="Camera" parent="."]
+visible = false
 script = ExtResource( 8 )
 sensitivity = 1.0

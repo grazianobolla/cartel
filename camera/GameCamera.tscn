@@ -2,7 +2,7 @@
 
 [ext_resource path="res://camera/CameraController.cs" type="Script" id=1]
 
-[node name="Camera" type="Camera"]
+[node name="GameCamera" type="Camera"]
 transform = Transform( -0.0174525, 0.681898, -0.731244, 0, 0.731355, 0.682002, 0.999849, 0.0119026, -0.012764, -21.968, 16.2668, -0.513496 )
 current = true
 script = ExtResource( 1 )

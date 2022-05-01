@@ -107,7 +107,7 @@ public class Player : Spatial
         GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
-    private async Task AnimateForward(int amount, float stepTime = .1f)
+    private async Task AnimateForward(int amount, float stepTime = .2f)
     {
         TransformInterpolator ti = (TransformInterpolator)GetNode("TransformInterpolator");
 
@@ -115,9 +115,15 @@ public class Player : Spatial
         {
             int tileIndex = index + i;
 
-            Transform target = Board.GetTileTransform(tileIndex);
-            ti.InterpolateTransform(this, target);
-            ti.Start(stepTime);
+            //TODO: Gets tile position and interpolates player
+            //probably shoudl't directly interpolate to the tile transform
+            //it works for now.
+            Transform tileTransform = Board.GetTileTransform(tileIndex);
+            //This rotates the player 90 to make it look 'forward'
+            tileTransform.basis = tileTransform.basis.Rotated(Vector3.Up, Mathf.Pi / 2);
+
+            ti.InterpolateTransform(this, tileTransform);
+            ti.Start(stepTime, Tween.TransitionType.Cubic);
 
             await ToSignal(ti, "FinishedInterpolation");
         }
