@@ -10,7 +10,8 @@ public class BoardGenerator : Node
 
     public void GenerateFromTemplate(GameTemplate template)
     {
-        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), 3.3f);
+        //TODO: get tile size from model
+        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), 3.1f);
         FillBoardTypes
         (
             template.GetTileCount(Tile.Type.PROPERTY),
@@ -35,10 +36,12 @@ public class BoardGenerator : Node
         for (int i = 0; i < sideLenght * 4; i++)
         {
             Spatial tile = (Spatial)tileScene.Instance();
+            tile.Name = $"Tile{i}";
 
             //Rotate and place tile in place.
             int filter = (i > 0 ? 1 : 0);
             tile.Translate(pos + dir * tileSize * filter);
+
             tile.RotateY(-(Mathf.Pi / 2) * (int)(i / sideLenght + 1));
             pos = tile.Translation;
 
@@ -46,7 +49,9 @@ public class BoardGenerator : Node
             parent.AddChild(tile);
 
             if (i % sideLenght == 0 && i > 0)
+            {
                 dir = dir.Rotated(Vector3.Up, -Mathf.Pi / 2);
+            }
         }
 
         parent.Translate(new Vector3(-sideLenght * tileSize, 0, sideLenght * tileSize) / 2);
@@ -70,7 +75,9 @@ public class BoardGenerator : Node
             var tileTypeList = GenerateTileArray(propertyCount, stateCount, chanceCount);
 
             for (int i = 0; i < sideList.Count; i++)
+            {
                 sideList[i].type = tileTypeList[i];
+            }
         }
     }
 

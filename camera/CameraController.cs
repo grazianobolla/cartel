@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using System.Threading.Tasks;
 
 public class CameraController : Camera
 {
@@ -8,20 +8,18 @@ public class CameraController : Camera
     [Export] private Vector3 _focusOffset = new Vector3(-10, 10, 0);
     [Export] private float _focusFOV = 50;
 
-    public enum State { OVERVIEW, FOCUSING };
+    public enum State { OVERVIEW, FOCUS };
     public State currentState { get; private set; } = State.OVERVIEW;
 
-    private Tween _tween;
     private Transform _overviewTransform;
     private Spatial _playerTarget;
     private float _weight;
 
+    private const float MIN_DISTANCE = 0.5f;
+
     public override void _Ready()
     {
-        _tween = (Tween)GetNode("Tween");
-
         _overviewTransform = GetOverviewTransform();
-        Overview();
     }
 
     public override void _PhysicsProcess(float delta)
@@ -30,7 +28,7 @@ public class CameraController : Camera
 
         switch (currentState)
         {
-            case State.FOCUSING:
+            case State.FOCUS:
                 {
                     Vector3 targetPos = _playerTarget.GlobalTransform.origin;
                     Transform targetTransform = this.GlobalTransform;
@@ -52,21 +50,17 @@ public class CameraController : Camera
 
     }
 
-    public async void Overview(float weight = 3, float delay = 0)
+    public void Overview(float weight = 3)
     {
-        await ToSignal(GetTree().CreateTimer(delay), "timeout");
-
         _weight = weight;
         currentState = State.OVERVIEW;
     }
 
-    public async void FocusPlayer(Spatial player, float weight = 3, float delay = 0)
+    public void Focus(Spatial player, float weight = 3)
     {
-        await ToSignal(GetTree().CreateTimer(delay), "timeout");
-
         _playerTarget = player;
         _weight = weight;
-        currentState = State.FOCUSING;
+        currentState = State.FOCUS;
     }
 
     private Transform GetOverviewTransform()

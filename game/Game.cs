@@ -25,6 +25,8 @@ public partial class Game : Spatial
         Randomize();
         CreateGame();
         ConnectSignals();
+
+        _camera.Overview();
     }
 
     private void ConnectSignals()
@@ -67,6 +69,7 @@ public partial class Game : Spatial
         }
     }
 
+    //Starts a game cycle with the current player
     private async void StartCycle(int diceNumber)
     {
         Player player = GetCurrentPlayer();
@@ -74,15 +77,29 @@ public partial class Game : Spatial
         if (currentState != State.WAITING)
             return;
 
+        //Iterates players and checks for things like
+        //jail time reduction etc.
         _playerManager.CheckTurn();
 
-        _camera.FocusPlayer(player);
+        //Camera focus the player
+        _camera.Focus(player);
+
+        await ToSignal(GetTree().CreateTimer(1), "timeout");
+
+        //Player moves
         currentState = State.MOVING;
         await MoveState(player, diceNumber);
 
+        //Process landing, does things like
+        //charge player depending on landing tile,
+        //sending the player to prision etc.
         currentState = State.PROCESSING;
         await _tileInteractor.ProcessLanding(player, _template);
 
+        await ToSignal(GetTree().CreateTimer(2), "timeout");
+
+        //If the player is allowed to play, it is presented
+        //with an intreaction menu.
         if (player.CanPlay())
         {
             _camera.Overview();

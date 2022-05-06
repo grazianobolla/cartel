@@ -83,9 +83,11 @@ public class Tile : Spatial
             return false;
 
         _data.houses += 1;
+
+        //TODO: properly spawn model
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
-        //TODO: magic numbers!
         houseModel.Translate(new Vector3((float)GD.RandRange(0.7, -0.7), 0, -1));
+        //-------------------------
         UpdateVisual();
 
         return true;
@@ -93,8 +95,7 @@ public class Tile : Spatial
 
     private void UpdateText(String str)
     {
-        GetNode<Label>("Viewport/Label").Text = str;
-        GetNode<Viewport>("Viewport").UpdateViewport();
+
     }
 
     private void UpdateGroupMesh(Color color)
@@ -109,16 +110,15 @@ public class Tile : Spatial
         {
             case Type.PROPERTY:
                 UpdateGroupMesh(_data.color);
-                UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}\nfee: {GetFee()}");
+                UpdateText($"{_data.label}\n${_data.price}");
                 break;
 
             case Type.STATE:
-                UpdateText($"{index}\n{_data.label}\nprice: {_data.price}\ngroup: {_data.group}");
+                UpdateText($"{_data.label}\n${_data.price}");
                 break;
 
             case Type.CORNER:
                 UpdateText($"{_data.group}");
-                GetNode<MeshInstance>("Mesh").Mesh.Set("size", new Vector3(3, 0.25f, 3));
                 break;
 
             case Type.CHANCE:

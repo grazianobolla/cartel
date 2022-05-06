@@ -24,6 +24,12 @@ public class AirConsole : Node
         JavaScript.Eval("airconsole = new AirConsole({device_motion: 50})");
         _airconsole = JavaScript.GetInterface("airconsole");
 
+        if (_airconsole == null)
+        {
+            PrintErr("can't eval airconsole");
+            return;
+        }
+
         ConnectCallbacks();
         Print("airconsole initialized");
         ready = true;
