@@ -72,7 +72,11 @@ public class BoardGenerator : Node
             sideList[0].type = Tile.Type.CORNER;
             sideList.RemoveAt(0);
 
-            var tileTypeList = GenerateTileArray(propertyCount, stateCount, chanceCount);
+            var tileTypeList = GetRandomTileTypeList(propertyCount, stateCount, chanceCount);
+
+            //Should not happen
+            if (sideList.Count != tileTypeList.Count)
+                PrintErr("tileTypeList and sideList count do not match");
 
             for (int i = 0; i < sideList.Count; i++)
             {
@@ -83,6 +87,7 @@ public class BoardGenerator : Node
 
     private void FillBoard(List<TileData> dataList)
     {
+        //Should not happen
         if (dataList.Count != _boardList.Count)
             PrintErr("dataList and _boardList count do not match");
 
@@ -93,21 +98,42 @@ public class BoardGenerator : Node
         }
     }
 
-    private Godot.Collections.Array<Tile.Type> GenerateTileArray(int propertyCount, int stateCount, int chanceCount)
+    private List<Tile.Type> GetRandomTileTypeList(int propertyCount, int stateCount, int chanceCount)
     {
-        Godot.Collections.Array<Tile.Type> typeArray = new Godot.Collections.Array<Tile.Type>();
+        List<Tile.Type> typeList = new List<Tile.Type>();
 
         for (int i = 0; i < propertyCount; i++)
-            typeArray.Add(Tile.Type.PROPERTY);
+        {
+            typeList.Add(Tile.Type.PROPERTY);
+        }
 
         for (int i = 0; i < stateCount; i++)
-            typeArray.Add(Tile.Type.STATE);
+        {
+            typeList.Add(Tile.Type.STATE);
+        }
 
         for (int i = 0; i < chanceCount; i++)
-            typeArray.Add(Tile.Type.CHANCE);
+        {
+            typeList.Add(Tile.Type.CHANCE);
+        }
 
-        typeArray.Shuffle();
+        ShuffleArray(typeList);
 
-        return typeArray;
+        return typeList;
+    }
+
+    private void ShuffleArray<T>(List<T> array)
+    {
+        //TODO: check this function
+        var rng = new Random();
+
+        int n = array.Count - 1;
+        while (n > 1)
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
     }
 }

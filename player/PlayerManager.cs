@@ -11,7 +11,7 @@ public class PlayerManager : Node
     public void AddPlayer(int startingMoney)
     {
         //TODO: remove! change for signal
-        //GetNode<Controller>("/root/Controller").SetActivePlayers(playersList.Count + 1);
+        GetNode<Controller>("/root/Controller").SetActivePlayers(playersList.Count + 1);
 
         Player player = (Player)_playerScene.Instance();
         AddChild(player);

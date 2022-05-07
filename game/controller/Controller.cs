@@ -55,6 +55,8 @@ public class Controller : Node
 
     public void SetActivePlayers(int amount)
     {
+        if (!_airconsole.ready) { return; }
+
         _airconsole.SetActivePlayers(amount);
     }
 
