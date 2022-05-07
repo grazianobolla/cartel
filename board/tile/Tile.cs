@@ -86,7 +86,8 @@ public class Tile : Spatial
 
         //TODO: properly spawn model
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
-        houseModel.Translate(new Vector3((float)GD.RandRange(0.7, -0.7), 0, -1));
+        houseModel.Translate(new Vector3((float)GD.RandRange(1, -1), 0, (float)GD.RandRange(1, -1)));
+        houseModel.RotateY(Mathf.Deg2Rad((float)GD.RandRange(0, 360)));
         //-------------------------
         UpdateVisual();
 
