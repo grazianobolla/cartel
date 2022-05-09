@@ -8,11 +8,12 @@ public class CameraController : Camera
     [Export] private Vector3 _focusOffset = new Vector3(-10, 10, 0);
     [Export] private float _focusFOV = 50;
 
+
     public enum State { OVERVIEW, FOCUS };
     public State currentState { get; private set; } = State.OVERVIEW;
 
     private Transform _overviewTransform;
-    private Spatial _playerTarget;
+    private Spatial _target;
     private float _weight;
 
     private const float MIN_DISTANCE = 0.5f;
@@ -30,7 +31,7 @@ public class CameraController : Camera
         {
             case State.FOCUS:
                 {
-                    Vector3 targetPos = _playerTarget.GlobalTransform.origin;
+                    Vector3 targetPos = _target.GlobalTransform.origin;
                     Transform targetTransform = this.GlobalTransform;
                     targetTransform.origin = targetPos + _focusOffset;
                     targetTransform = targetTransform.LookingAt(targetPos, Vector3.Up);
@@ -58,7 +59,7 @@ public class CameraController : Camera
 
     public void Focus(Spatial player, float weight = 3)
     {
-        _playerTarget = player;
+        _target = player;
         _weight = weight;
         currentState = State.FOCUS;
     }

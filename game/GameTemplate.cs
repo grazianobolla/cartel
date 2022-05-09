@@ -62,7 +62,7 @@ public class GameTemplate
 
         var properties = _template["properties"];
         Godot.Color groupColor = Utils.GetRandomColor();
-        groupColor.s = 1;
+        groupColor.s = 0.8f;
 
         foreach (Tile tile in boardList)
         {
@@ -80,7 +80,7 @@ public class GameTemplate
                         {
                             groupCount = (groupCount + 1) % ((JArray)properties["normal"]).Count;
                             groupColor = Utils.GetRandomColor();
-                            groupColor.s = 1;
+                            groupColor.s = 0.8f;
                         }
 
                         //TODO: magic num

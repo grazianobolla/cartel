@@ -13,7 +13,7 @@
 size = Vector3( 35, 1, 35 )
 
 [sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0, 0, 0, 1 )
+albedo_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
 
 [node name="Game" type="Spatial"]
 script = ExtResource( 2 )
@@ -33,7 +33,6 @@ playerManagerPath = NodePath("../PlayerManager")
 
 [node name="GameCamera" parent="." instance=ExtResource( 3 )]
 transform = Transform( -4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 30, 0 )
-_overviewTarget = Vector3( 0, 60, 0 )
 
 [node name="Camera2" type="Camera" parent="."]
 transform = Transform( -0.325567, 0.656814, -0.680148, 0, 0.719339, 0.694659, 0.945519, 0.226158, -0.234193, -17.7721, 1.15769, 16.8001 )
@@ -51,7 +50,7 @@ _cameraPath = NodePath("../GameCamera")
 [node name="DebugPanel" parent="." instance=ExtResource( 5 )]
 
 [node name="PlatformMesh" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
 

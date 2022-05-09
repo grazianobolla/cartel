@@ -6,12 +6,14 @@ using static Godot.GD;
 public class BoardGenerator : Node
 {
     [Export] private NodePath _tileGroup = null;
+    [Export] private float _tileSize = 2.7f;
+    [Export] private float _randomRotationIntensity = 0.01f;
     private List<Tile> _boardList = new List<Tile>();
 
     public void GenerateFromTemplate(GameTemplate template)
     {
         //TODO: get tile size from model
-        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), 3.1f);
+        InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), _tileSize);
         FillBoardTypes
         (
             template.GetTileCount(Tile.Type.PROPERTY),

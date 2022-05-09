@@ -13,13 +13,15 @@ public class Player : Spatial
     public State state { get; private set; } = State.PLAYING;
     public int jailTime { get; private set; } = 0;
 
+    private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
 
     public void Initialize(int id, int money)
     {
         this.id = id;
         this.Money = money;
-        this.Translation = Board.GetTileTransform(index).origin;
+        this.Translation = Board.GetTileTransform(index).origin + _posOffset;
+
         UpdateMesh(Utils.GetRandomColor());
     }
 
@@ -119,6 +121,8 @@ public class Player : Spatial
             //probably shoudl't directly interpolate to the tile transform
             //it works for now.
             Transform tileTransform = Board.GetTileTransform(tileIndex);
+            //Adjust mesh position
+            tileTransform.origin += _posOffset;
             //This rotates the player 90 to make it look 'forward'
             tileTransform.basis = tileTransform.basis.Rotated(Vector3.Up, Mathf.Pi / 2);
 

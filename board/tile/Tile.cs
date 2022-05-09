@@ -94,15 +94,15 @@ public class Tile : Spatial
         return true;
     }
 
-    private void UpdateText(String str)
-    {
-
-    }
-
     private void UpdateGroupMesh(Color color)
     {
         GetNode<MeshInstance>("GroupMesh").Visible = true;
         GetNode<MeshInstance>("GroupMesh").GetSurfaceMaterial(0).Set("albedo_color", color);
+    }
+
+    private void UpdateText(String text)
+    {
+        GetNode<Label>("Viewport/Label").Text = text;
     }
 
     private void UpdateVisual()
@@ -111,24 +111,14 @@ public class Tile : Spatial
         {
             case Type.PROPERTY:
                 UpdateGroupMesh(_data.color);
-                UpdateText($"{_data.label}\n${_data.price}");
+                UpdateText(_data.label);
                 break;
 
             case Type.STATE:
-                UpdateText($"{_data.label}\n${_data.price}");
-                break;
-
             case Type.CORNER:
-                UpdateText($"{_data.group}");
-                break;
-
             case Type.CHANCE:
-                UpdateText($"{_data.label}");
-                break;
-
             case Type.NONE:
             default:
-                UpdateText("Error");
                 break;
         }
     }
