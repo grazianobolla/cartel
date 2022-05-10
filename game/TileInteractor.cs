@@ -4,6 +4,8 @@ using static Godot.GD;
 
 public class TileInteractor : Node
 {
+    [Signal] public delegate void OnChanceLanding(int playerId, string text, int cost);
+
     [Export] private NodePath playerManagerPath = null;
     private PlayerManager _playerManager;
 
@@ -55,9 +57,9 @@ public class TileInteractor : Node
 
             case Tile.Type.CHANCE:
                 var chanceData = template.GetRandomChanceData();
-                //TODO: show player message
                 Print("landed on chance tile cost: ", chanceData.cost);
                 player.Money += chanceData.cost;
+                EmitSignal(nameof(OnChanceLanding), player.id, chanceData.text, chanceData.cost);
                 break;
 
             case Tile.Type.CORNER:

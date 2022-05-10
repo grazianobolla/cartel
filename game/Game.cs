@@ -15,12 +15,14 @@ public partial class Game : Spatial
     private PlayerManager _playerManager;
     private TileInteractor _tileInteractor;
     private CameraController _camera;
+    private Controller _controller;
 
     public override void _Ready()
     {
         _tileInteractor = (TileInteractor)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
+        _controller = (Controller)GetNode("/root/Controller");
 
         Randomize();
         CreateGame();
@@ -31,9 +33,15 @@ public partial class Game : Spatial
 
     private void ConnectSignals()
     {
-        GetNode("/root/Controller").Connect("OnAction", this, nameof(OnReceiveAction));
-        //TODO: remove
-        GetNode("/root/Controller").Connect("DebugShake", this, nameof(OnDebugShake));
+        _controller.Connect("OnAction", this, nameof(OnReceiveAction));
+        _controller.Connect("DebugShake", this, nameof(OnDebugShake));
+
+        _playerManager.Connect("AddedPlayer", this, "OnPlayerAdded");
+    }
+
+    private void OnPlayerAdded(Player player, int playerCount)
+    {
+        GetNode<AirConsole>("/root/AirConsole").SetActivePlayers(playerCount);
     }
 
     public void CreateGame(String templatePath = "res://templates/template0.json")

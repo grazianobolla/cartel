@@ -5,6 +5,8 @@ using static Godot.GD;
 
 public class Player : Spatial
 {
+    [Signal] public delegate void MoneyChange(int id, int money);
+
     public enum State { PLAYING, JAILED };
 
     public int id { get; private set; } = 0;
@@ -95,8 +97,7 @@ public class Player : Spatial
         set
         {
             _money = value;
-            //TODO: move somewhere else (maybe Game.cs), call signal instead
-            GetNode<Controller>("/root/Controller").UpdateMoneyLabel(id, _money);
+            EmitSignal(nameof(MoneyChange), id, _money);
             if (_money < 1)
             {
                 Print("player ", id, " lost!");

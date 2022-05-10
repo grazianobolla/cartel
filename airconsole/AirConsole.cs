@@ -31,8 +31,8 @@ public class AirConsole : Node
         }
 
         ConnectCallbacks();
-        Print("airconsole initialized");
         ready = true;
+        Print("airconsole initialized");
     }
 
     public int ConvertDeviceIdToPlayerNumber(int deviceId)

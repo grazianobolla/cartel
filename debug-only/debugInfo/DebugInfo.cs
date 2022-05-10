@@ -27,7 +27,7 @@ public class DebugInfo : Control
         DrawString(_defaultFont, new Vector2(8, 16), $"current player {_game.currentPlayerId}, current state {_game.currentState}");
         DrawString(_defaultFont, new Vector2(8, 32), $"camera state {_camera.currentState}, fov {_camera.Fov}");
 
-        for (int i = 0; i < _playerManager.playersList.Count; i++)
+        for (int i = 0; i < _playerManager.PlayerList.Count; i++)
         {
             Player player = _playerManager.GetPlayer(i);
 

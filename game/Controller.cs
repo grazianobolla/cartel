@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using static Godot.GD;
 
 //TODO: remove debug stuff here
 public class Controller : Node
@@ -9,21 +10,17 @@ public class Controller : Node
 
     public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
 
-    private AirConsole _airconsole;
+    private AirConsole _airConsole;
 
     public override void _Ready()
     {
-        ConnectAirConsole();
-    }
+        _airConsole = (AirConsole)GetNode("/root/AirConsole");
 
-    private void ConnectAirConsole()
-    {
-        _airconsole = (AirConsole)GetNode("AirConsole");
-
-        if (!_airconsole.ready)
+        if (!_airConsole.ready)
             return;
 
-        _airconsole.Connect("OnMessage", this, "OnAirconsoleControllerMessage");
+        _airConsole.Connect("OnMessage", this, "OnAirconsoleControllerMessage");
+        Print("airconsole connected");
     }
 
     private void OnAirconsoleControllerMessage(int playerNumber, Godot.JavaScriptObject data)
@@ -39,25 +36,6 @@ public class Controller : Node
         argumentArray.RemoveAt(0);
 
         EmitSignal(nameof(OnAction), playerNumber, action, argumentArray);
-    }
-
-    //TODO: move this to a specific AirConsole interface
-    public void UpdateMoneyLabel(int playerId, int value)
-    {
-        if (!_airconsole.ready)
-            return;
-
-        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
-        data.Set("instruction", "update-money");
-        data.Set("content", value);
-        _airconsole.Message(_airconsole.ConvertPlayerNumberToDeviceId(playerId), data);
-    }
-
-    public void SetActivePlayers(int amount)
-    {
-        if (!_airconsole.ready) { return; }
-
-        _airconsole.SetActivePlayers(amount);
     }
 
     public void SendDebugControllerMessage(int playerNumber, Action instruction, Godot.Collections.Array data)
