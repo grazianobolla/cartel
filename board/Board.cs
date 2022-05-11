@@ -12,7 +12,7 @@ public static class Board
         boardSize = _boardList.Count;
     }
 
-    public static int GetMovedIndex(int start, int steps)
+    public static int GetShiftedIndex(int start, int steps)
     {
         int size = _boardList.Count;
         return (steps + start) % size;
@@ -20,12 +20,12 @@ public static class Board
 
     public static Tile GetTile(int index)
     {
-        return _boardList[GetMovedIndex(0, index)];
+        return _boardList[GetShiftedIndex(0, index)];
     }
 
     public static Transform GetTileTransform(int index)
     {
-        return _boardList[GetMovedIndex(0, index)].GlobalTransform;
+        return _boardList[GetShiftedIndex(0, index)].GlobalTransform;
     }
 
     //TODO: maybe this can be improved by loading from template

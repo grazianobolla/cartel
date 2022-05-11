@@ -11,18 +11,18 @@ public partial class Game : Spatial
     public State currentState { get; private set; } = State.WAITING;
     public int currentPlayerId { get; private set; } = 0;
 
+    private Controller _controller;
     private GameTemplate _template;
     private PlayerManager _playerManager;
     private TileInteractor _tileInteractor;
     private CameraController _camera;
-    private Controller _controller;
 
     public override void _Ready()
     {
+        _controller = (Controller)GetNode("/root/Controller");
         _tileInteractor = (TileInteractor)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
-        _controller = (Controller)GetNode("/root/Controller");
 
         Randomize();
         CreateGame();
@@ -110,9 +110,10 @@ public partial class Game : Spatial
         //with an intreaction menu.
         if (player.CanPlay())
         {
-            _camera.Overview();
             currentState = State.INTERACTING;
+            _tileInteractor.EnableTileSelection();
             await ToSignal(this, nameof(FinishedInteraction));
+            _tileInteractor.DisableTileSelection();
         }
 
         NextPlayerTurn();

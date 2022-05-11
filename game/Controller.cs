@@ -8,7 +8,7 @@ public class Controller : Node
     [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Collections.Array arguments);
     [Signal] public delegate void DebugShake(int index);
 
-    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT };
+    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT, BUTTON_LEFT, BUTTON_RIGHT };
 
     private AirConsole _airConsole;
 
@@ -29,8 +29,12 @@ public class Controller : Node
 
         string actionStr = (string)argumentArray[0];
         Action action = Action.NONE;
+
         if (!Enum.TryParse<Action>(actionStr, out action))
+        {
+            PrintErr("action ", actionStr, " unknown");
             return;
+        }
 
         //remove instruction and leave only instruction arguments
         argumentArray.RemoveAt(0);

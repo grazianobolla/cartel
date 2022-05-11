@@ -8,10 +8,12 @@ public class TileInteractor : Node
 
     [Export] private NodePath playerManagerPath = null;
     private PlayerManager _playerManager;
+    private TileSelector _tileSelector;
 
     public override void _Ready()
     {
         _playerManager = (PlayerManager)GetNode(playerManagerPath);
+        _tileSelector = (TileSelector)GetNode("TileSelector");
     }
 
     //Called when a player interacts with the game (in his turn)
@@ -25,13 +27,16 @@ public class TileInteractor : Node
 
             //[tileIndex]
             case Controller.Action.BUY_HOUSE:
-                if (arguments[0] != null)
-                    BuyHouse(player, (int)arguments[0]);
-
+                BuyHouse(player, _tileSelector.CurrentIndex);
                 return false;
 
             case Controller.Action.OMIT:
                 return true;
+
+            case Controller.Action.BUTTON_LEFT:
+            case Controller.Action.BUTTON_RIGHT:
+                _tileSelector.Next();
+                return false;
 
             default:
                 PrintErr("unkown action");
@@ -42,6 +47,7 @@ public class TileInteractor : Node
     //Called when a player lands on a tile, this happens automatically
     public async Task ProcessLanding(Player player, GameTemplate template)
     {
+        //Current tile under the player
         Tile tile = Board.GetTile(player.index);
 
         switch (tile.type)
@@ -143,6 +149,16 @@ public class TileInteractor : Node
 
         Print("you cant buy more houses");
         return false;
+    }
+
+    public void EnableTileSelection()
+    {
+        _tileSelector.Enable();
+    }
+
+    public void DisableTileSelection()
+    {
+        _tileSelector.Disable();
     }
 
     private void AssignTile(Player player, Tile tile)

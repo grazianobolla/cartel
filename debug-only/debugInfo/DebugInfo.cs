@@ -6,11 +6,13 @@ public class DebugInfo : Control
     [Export] private NodePath _gamePath;
     [Export] private NodePath _playerManagerPath;
     [Export] private NodePath _cameraPath;
+    [Export] private NodePath _tileSelectorPath;
 
     private Game _game;
     private PlayerManager _playerManager;
     private Font _defaultFont;
     private CameraController _camera;
+    private TileSelector _tileSelector;
 
     public override void _Ready()
     {
@@ -18,6 +20,7 @@ public class DebugInfo : Control
         _playerManager = (PlayerManager)GetNode(_playerManagerPath);
         _defaultFont = this.GetFont("font");
         _camera = (CameraController)GetNode(_cameraPath);
+        _tileSelector = (TileSelector)GetNode(_tileSelectorPath);
     }
 
     public override void _PhysicsProcess(float delta) { Update(); }
@@ -26,6 +29,7 @@ public class DebugInfo : Control
     {
         DrawString(_defaultFont, new Vector2(8, 16), $"current player {_game.currentPlayerId}, current state {_game.currentState}");
         DrawString(_defaultFont, new Vector2(8, 32), $"camera state {_camera.currentState}, fov {_camera.Fov}");
+        DrawString(_defaultFont, new Vector2(8, 48), $"tile selector index {_tileSelector.CurrentIndex} enabled {_tileSelector.Enabled}");
 
         for (int i = 0; i < _playerManager.PlayerList.Count; i++)
         {

@@ -52,4 +52,14 @@ public class DebugPanel : Control
     {
         _camera.Focus(_playerManager.GetPlayer(0));
     }
+
+    private void _on_Left_pressed()
+    {
+        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUTTON_LEFT, null);
+    }
+
+    private void _on_Right_pressed()
+    {
+        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUTTON_RIGHT, null);
+    }
 }

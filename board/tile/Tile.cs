@@ -29,9 +29,12 @@ public class Tile : Spatial
     public Player owner { get; set; } = null;
 
     private TileData _data;
+    private Vector3 _defaultPosition;
 
     public void Initialize(TileData data, int index)
     {
+        _defaultPosition = this.Transform.origin;
+
         this._data = data;
         this.index = index;
         UpdateVisual();
@@ -120,6 +123,20 @@ public class Tile : Spatial
             case Type.NONE:
             default:
                 break;
+        }
+    }
+
+    public void Highlight(bool enabled)
+    {
+        GetNode<MeshInstance>("Mesh").GetSurfaceMaterial(0).NextPass.Set("shader_param/enabled", enabled);
+
+        if (enabled)
+        {
+            Translation = _defaultPosition + new Vector3(0, 3, 0);
+        }
+        else
+        {
+            Translation = _defaultPosition;
         }
     }
 

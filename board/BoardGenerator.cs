@@ -6,8 +6,8 @@ using static Godot.GD;
 public class BoardGenerator : Node
 {
     [Export] private NodePath _tileGroup = null;
-    [Export] private float _tileSize = 2.7f;
-    [Export] private float _randomRotationIntensity = 0.01f;
+    [Export] private float _tileSize = 3.0f;
+
     private List<Tile> _boardList = new List<Tile>();
 
     public void GenerateFromTemplate(GameTemplate template)

@@ -70,6 +70,30 @@ margin_right = 198.0
 margin_bottom = 199.0
 text = "Camera Focus"
 
+[node name="TileSelection" type="Button" parent="VBoxContainer"]
+margin_top = 203.0
+margin_right = 198.0
+margin_bottom = 228.0
+text = "Tile Selection"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 232.0
+margin_right = 198.0
+margin_bottom = 257.0
+
+[node name="Left" type="Button" parent="VBoxContainer/HBoxContainer3"]
+margin_right = 97.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+text = "Left"
+
+[node name="Right" type="Button" parent="VBoxContainer/HBoxContainer3"]
+margin_left = 101.0
+margin_right = 198.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+text = "Right"
+
 [connection signal="pressed" from="VBoxContainer/AddPlayer" to="." method="_on_AddPlayer_pressed"]
 [connection signal="pressed" from="VBoxContainer/ShakeButton" to="." method="_on_ShakeButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/OmitButton" to="." method="_on_OmitButton_pressed"]
@@ -77,3 +101,6 @@ text = "Camera Focus"
 [connection signal="pressed" from="VBoxContainer/BuyButton" to="." method="_on_BuyButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/CameraOverview" to="." method="_on_CameraOverview_pressed"]
 [connection signal="pressed" from="VBoxContainer/CameraFocus" to="." method="_on_CameraFocus_pressed"]
+[connection signal="pressed" from="VBoxContainer/TileSelection" to="." method="_on_TileSelection_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Left" to="." method="_on_Left_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Right" to="." method="_on_Right_pressed"]

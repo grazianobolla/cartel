@@ -35,27 +35,35 @@ public class AirConsole : Node
         Print("airconsole initialized");
     }
 
+    private object SafeCall(string method, params object[] args)
+    {
+        if (!ready)
+            return null;
+
+        return _airconsole.Call(method, args);
+    }
+
     public int ConvertDeviceIdToPlayerNumber(int deviceId)
     {
-        object playerNumber = _airconsole.Call("convertDeviceIdToPlayerNumber", deviceId);
+        object playerNumber = SafeCall("convertDeviceIdToPlayerNumber", deviceId);
         return (int)playerNumber;
     }
 
     public int ConvertPlayerNumberToDeviceId(int playerId)
     {
-        object playerNumber = _airconsole.Call("convertPlayerNumberToDeviceId", playerId);
+        object playerNumber = SafeCall("convertPlayerNumberToDeviceId", playerId);
         return (int)playerNumber;
     }
 
 
     public void SetActivePlayers(int maxPlayers)
     {
-        _airconsole.Call("setActivePlayers", maxPlayers);
+        SafeCall("setActivePlayers", maxPlayers);
     }
 
     public void Message(int deviceId, JavaScriptObject obj)
     {
-        _airconsole.Call("message", deviceId, obj);
+        SafeCall("message", deviceId, obj);
     }
 
     private void ConnectCallbacks()

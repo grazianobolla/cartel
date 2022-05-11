@@ -31,7 +31,7 @@ public class Player : Spatial
     {
         Print("moving by ", amount, " places");
         await AnimateForward(amount);
-        index = Board.GetMovedIndex(index, amount);
+        index = Board.GetShiftedIndex(index, amount);
     }
 
     public int GetDistanceTo(int toIndex)
