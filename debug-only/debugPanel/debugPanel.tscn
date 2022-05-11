@@ -36,27 +36,17 @@ margin_right = 198.0
 margin_bottom = 83.0
 text = "Omit"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="BuyButton" type="Button" parent="VBoxContainer"]
 margin_top = 87.0
 margin_right = 198.0
 margin_bottom = 112.0
+text = "Buy Tile"
 
-[node name="BuyHouseButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
-margin_right = 88.0
-margin_bottom = 25.0
-text = "Buy House"
-
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer/HBoxContainer2"]
-margin_left = 92.0
-margin_right = 198.0
-margin_bottom = 25.0
-size_flags_horizontal = 3
-
-[node name="BuyButton" type="Button" parent="VBoxContainer"]
+[node name="BuyHouseButton" type="Button" parent="VBoxContainer"]
 margin_top = 116.0
 margin_right = 198.0
 margin_bottom = 141.0
-text = "Buy Tile"
+text = "Buy House"
 
 [node name="CameraOverview" type="Button" parent="VBoxContainer"]
 margin_top = 145.0
@@ -75,25 +65,25 @@ margin_top = 203.0
 margin_right = 198.0
 margin_bottom = 228.0
 
-[node name="Left" type="Button" parent="VBoxContainer/HBoxContainer3"]
+[node name="Forward" type="Button" parent="VBoxContainer/HBoxContainer3"]
 margin_right = 97.0
 margin_bottom = 25.0
 size_flags_horizontal = 3
-text = "Left"
+text = "Forward"
 
-[node name="Right" type="Button" parent="VBoxContainer/HBoxContainer3"]
+[node name="Backwards" type="Button" parent="VBoxContainer/HBoxContainer3"]
 margin_left = 101.0
 margin_right = 198.0
 margin_bottom = 25.0
 size_flags_horizontal = 3
-text = "Right"
+text = "Backwards"
 
 [connection signal="pressed" from="VBoxContainer/AddPlayer" to="." method="_on_AddPlayer_pressed"]
 [connection signal="pressed" from="VBoxContainer/ShakeButton" to="." method="_on_ShakeButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/OmitButton" to="." method="_on_OmitButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/BuyHouseButton" to="." method="_on_BuyHouseButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/BuyButton" to="." method="_on_BuyButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/BuyHouseButton" to="." method="_on_BuyHouseButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/CameraOverview" to="." method="_on_CameraOverview_pressed"]
 [connection signal="pressed" from="VBoxContainer/CameraFocus" to="." method="_on_CameraFocus_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Left" to="." method="_on_Left_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Right" to="." method="_on_Right_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Forward" to="." method="_on_Right_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/Backwards" to="." method="_on_Left_pressed"]

@@ -67,12 +67,13 @@ public partial class Game : Spatial
                 break;
 
             default:
-                if (CurrentState != State.INTERACTING)
-                    return;
+                if (CurrentState == State.INTERACTING)
+                {
 
-                if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
-                    EmitSignal(nameof(FinishedInteraction));
+                    if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
+                        EmitSignal(nameof(FinishedInteraction));
 
+                }
                 break;
         }
     }
@@ -85,6 +86,9 @@ public partial class Game : Spatial
         if (CurrentState != State.WAITING)
             return;
 
+        //First state of the cycle
+        CurrentState = State.MOVING;
+
         //Iterates players and checks for things like
         //jail time reduction etc.
         _playerManager.CheckTurn();
@@ -95,13 +99,14 @@ public partial class Game : Spatial
         await ToSignal(GetTree().CreateTimer(1), "timeout");
 
         //Player moves
-        CurrentState = State.MOVING;
         await MoveState(player, diceNumber);
+
+        //Second state of the cycle
+        CurrentState = State.PROCESSING;
 
         //Process landing, does things like
         //charge player depending on landing tile,
         //sending the player to prision etc.
-        CurrentState = State.PROCESSING;
         await _tileInteractor.ProcessLanding(player, _template);
 
         await ToSignal(GetTree().CreateTimer(2), "timeout");
@@ -110,6 +115,7 @@ public partial class Game : Spatial
         //with an intreaction menu.
         if (player.CanPlay())
         {
+            //Third state of the cycle
             CurrentState = State.INTERACTING;
             _tileInteractor.EnableTileSelection();
             await ToSignal(this, nameof(FinishedInteraction));
@@ -126,6 +132,7 @@ public partial class Game : Spatial
         CurrentState = State.WAITING;
     }
 
+    //Moves the player and checks for start bonus
     private async Task MoveState(Player player, int moveAmount)
     {
         int initialIndex = player.Index;

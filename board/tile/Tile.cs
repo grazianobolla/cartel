@@ -53,7 +53,7 @@ public class Tile : Spatial
 
         //TODO: properly spawn model
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
-        houseModel.Translate(new Vector3((float)GD.RandRange(1, -1), 0, (float)GD.RandRange(1, -1)));
+        houseModel.Translate(new Vector3((float)GD.RandRange(1, -1), 0.25f, (float)GD.RandRange(1, -1)));
         houseModel.RotateY(Mathf.Deg2Rad((float)GD.RandRange(0, 360)));
         //-------------------------
         UpdateVisual();
@@ -124,15 +124,6 @@ public class Tile : Spatial
             {
                 case (int)ButtonList.Left:
                     GetNode<Controller>("/root/Controller").SendDebugShakeMethod(Index);
-                    break;
-
-                case (int)ButtonList.Middle:
-                    SetOwnerIndicator(true, Colors.RebeccaPurple);
-                    GetNode<TextEdit>("/root/Game/DebugPanel/VBoxContainer/HBoxContainer2/TextEdit").Text = Index.ToString();
-                    break;
-
-                case (int)ButtonList.WheelDown:
-                    SetOwnerIndicator(false, Colors.RebeccaPurple);
                     break;
             }
         }

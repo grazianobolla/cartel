@@ -110,13 +110,14 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.275, 0 )
 shape = SubResource( 5 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform( 0.9, 0, 0, 0, -3.93403e-08, 1, 0, -0.9, -4.37114e-08, 0, 0.1, -1.41561e-07 )
+transform = Transform( 0.7, 0, 0, 0, -3.0598e-08, 1, 0, -0.7, -4.37114e-08, 0, 0.1, -1.41561e-07 )
 modulate = Color( 0.772549, 0.313726, 0.8, 1 )
 texture = ExtResource( 4 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "RESET"
 anims/OwnerIndicatorShow = SubResource( 16 )
 anims/RESET = SubResource( 17 )
 

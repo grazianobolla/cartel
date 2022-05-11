@@ -27,10 +27,7 @@ public class DebugPanel : Control
 
     private void _on_BuyHouseButton_pressed()
     {
-        int index = 0;
-        int.TryParse(GetNode<TextEdit>("VBoxContainer/HBoxContainer2/TextEdit").Text, out index);
-        Godot.Collections.Array dataArray = new Godot.Collections.Array { index };
-        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUY_HOUSE, dataArray);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUY_HOUSE, null);
     }
 
     private void _on_OmitButton_pressed()
