@@ -14,6 +14,7 @@ public class Player : Spatial
     public List<Tile> OwnedTiles { get; } = new List<Tile>();
     public State PlayerState { get; private set; } = State.PLAYING;
     public int JailTime { get; private set; } = 0;
+    public Color Color { get; private set; } = Colors.White;
 
     private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
@@ -24,7 +25,9 @@ public class Player : Spatial
         this.Money = money;
         this.Translation = Board.GetTileTransform(Index).origin + _posOffset;
 
-        UpdateMesh(Utils.GetRandomColor());
+        var randomColor = Utils.GetRandomColor();
+        this.Color = randomColor;
+        UpdateMesh(randomColor);
     }
 
     public async Task Move(int amount)

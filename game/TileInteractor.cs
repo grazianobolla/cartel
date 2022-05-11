@@ -110,6 +110,7 @@ public class TileInteractor : Node
 
         player.Money -= tile.Data.Price;
         AssignTile(player, tile);
+        tile.SetOwnerIndicator(true, player.Color);
 
         Print("player ", player.Index, " purchased tile ", tile.Data.Label, " at ", tile.Data.Price);
         return true;

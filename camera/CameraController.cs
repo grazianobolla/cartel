@@ -27,7 +27,7 @@ public class CameraController : Camera
     {
         float weight = delta * _weight;
 
-        switch (currentState)
+        switch (CurrentState)
         {
             case State.FOCUS:
                 {
@@ -54,14 +54,14 @@ public class CameraController : Camera
     public void Overview(float weight = 3)
     {
         _weight = weight;
-        currentState = State.OVERVIEW;
+        CurrentState = State.OVERVIEW;
     }
 
     public void Focus(Spatial player, float weight = 3)
     {
         _target = player;
         _weight = weight;
-        currentState = State.FOCUS;
+        CurrentState = State.FOCUS;
     }
 
     private Transform GetOverviewTransform()

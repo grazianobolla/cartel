@@ -65,6 +65,7 @@ public class Tile : Spatial
     {
         Sprite3D label = GetNode<Sprite3D>("Sprite3D");
         label.Modulate = color;
+
         if (show)
         {
             _animationPlayer.Play("OwnerIndicatorShow");
