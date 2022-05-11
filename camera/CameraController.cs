@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 public class CameraController : Camera
 {
-    [Export] private Vector3 _overviewTarget = new Vector3(0, 55, 0);
+    [Export] private Vector3 _overviewTarget = new Vector3(0, 60, 0);
     [Export] private float _overviewFOV = 35;
     [Export] private Vector3 _focusOffset = new Vector3(-10, 10, 0);
     [Export] private float _focusFOV = 50;

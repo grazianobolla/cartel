@@ -30,11 +30,18 @@ public class Tile : Spatial
 
     private TileData _data;
     private Vector3 _defaultPosition;
+    private Tween _tween;
+    private AnimationPlayer _animationPlayer;
+
+    public override void _Ready()
+    {
+        _tween = (Tween)GetNode("Tween");
+        _defaultPosition = this.Transform.origin;
+        _animationPlayer = (AnimationPlayer)GetNode("AnimationPlayer");
+    }
 
     public void Initialize(TileData data, int index)
     {
-        _defaultPosition = this.Transform.origin;
-
         this._data = data;
         this.index = index;
         UpdateVisual();
@@ -97,13 +104,26 @@ public class Tile : Spatial
         return true;
     }
 
-    private void UpdateGroupMesh(Color color)
+    public void SetOwnerIndicator(bool show, Color color)
+    {
+        Sprite3D label = GetNode<Sprite3D>("Sprite3D");
+        label.Modulate = color;
+        if (show)
+        {
+            _animationPlayer.Play("OwnerIndicatorShow");
+            return;
+        }
+
+        _animationPlayer.PlayBackwards("OwnerIndicatorShow");
+    }
+
+    private void SetGroupMesh(Color color)
     {
         GetNode<MeshInstance>("GroupMesh").Visible = true;
         GetNode<MeshInstance>("GroupMesh").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
-    private void UpdateText(String text)
+    private void SetText(String text)
     {
         GetNode<Label>("Viewport/Label").Text = text;
     }
@@ -113,8 +133,8 @@ public class Tile : Spatial
         switch (this.type)
         {
             case Type.PROPERTY:
-                UpdateGroupMesh(_data.color);
-                UpdateText(_data.label);
+                SetGroupMesh(_data.color);
+                SetText(_data.label);
                 break;
 
             case Type.STATE:
@@ -126,18 +146,12 @@ public class Tile : Spatial
         }
     }
 
-    public void Highlight(bool enabled)
+    public void Highlight(bool enabled, float animationTime = 0.5f, float heightOffset = 2.0f)
     {
         GetNode<MeshInstance>("Mesh").GetSurfaceMaterial(0).NextPass.Set("shader_param/enabled", enabled);
-
-        if (enabled)
-        {
-            Translation = _defaultPosition + new Vector3(0, 3, 0);
-        }
-        else
-        {
-            Translation = _defaultPosition;
-        }
+        Vector3 target = _defaultPosition + (new Vector3(0, heightOffset, 0) * (enabled ? 1 : 0));
+        _tween.InterpolateProperty(this, "translation", null, target, animationTime, Tween.TransitionType.Cubic);
+        _tween.Start();
     }
 
     //TODO: debug
@@ -155,7 +169,12 @@ public class Tile : Spatial
                     break;
 
                 case (int)ButtonList.Middle:
+                    SetOwnerIndicator(true, Colors.RebeccaPurple);
                     GetNode<TextEdit>("/root/Game/DebugPanel/VBoxContainer/HBoxContainer2/TextEdit").Text = index.ToString();
+                    break;
+
+                case (int)ButtonList.WheelDown:
+                    SetOwnerIndicator(false, Colors.RebeccaPurple);
                     break;
             }
         }

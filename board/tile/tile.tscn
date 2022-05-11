@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://resources/fonts/RobotoMono-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://board/tile/Tile.cs" type="Script" id=2]
@@ -37,6 +37,37 @@ viewport_path = NodePath("Viewport")
 
 [sub_resource type="BoxShape" id=5]
 extents = Vector3( 1.25, 0.125, 1.25 )
+
+[sub_resource type="Animation" id=16]
+resource_name = "OwnerIndicatorShow"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite3D:translation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0.1, -1.41561e-07 ), Vector3( 0, 0.1, -1.5 ) ]
+}
+
+[sub_resource type="Animation" id=17]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite3D:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0.1, -1.41561e-07 ) ]
+}
 
 [node name="Tile" type="Spatial"]
 script = ExtResource( 2 )
@@ -79,10 +110,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.275, 0 )
 shape = SubResource( 5 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform( 0.9, 0, 0, 0, -3.93403e-08, 1, 0, -0.9, -4.37114e-08, 0, 0.0999999, -1.7 )
-visible = false
+transform = Transform( 0.9, 0, 0, 0, -3.93403e-08, 1, 0, -0.9, -4.37114e-08, 0, 0.1, -1.41561e-07 )
 modulate = Color( 0.772549, 0.313726, 0.8, 1 )
 texture = ExtResource( 4 )
-region_rect = Rect2( 10, 10, 100, 0 )
+region_enabled = true
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/OwnerIndicatorShow = SubResource( 16 )
+anims/RESET = SubResource( 17 )
 
 [connection signal="input_event" from="DebugArea" to="." method="_on_DebugArea_input_event"]

@@ -32,7 +32,6 @@ public class TileSelector : Node
     {
         Board.GetTile(CurrentIndex).Highlight(false);
         CurrentIndex = Board.GetShiftedIndex(CurrentIndex, forward ? 1 : -1);
-        GD.Print(CurrentIndex);
         Board.GetTile(CurrentIndex).Highlight(true);
     }
 }
