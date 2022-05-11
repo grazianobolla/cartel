@@ -18,7 +18,7 @@ public class PlayerManager : Node
         _playersList.Add(player);
         //TODO: id shouldn't be the index of the player
         player.Initialize(_playersList.Count - 1, startingMoney);
-        Print("added player id ", player.id, " player count ", _playersList.Count);
+        Print("added player id ", player.Id, " player count ", _playersList.Count);
     }
 
     public int GetNextId(int currentId)
@@ -39,14 +39,14 @@ public class PlayerManager : Node
         //TODO: check if the player has money
         from.Money -= amount;
         to.Money += amount;
-        Print($"player {from.id} transfered ${amount} to player {to.id}");
+        Print($"player {from.Id} transfered ${amount} to player {to.Id}");
     }
 
     public void CheckTurn()
     {
         foreach (Player player in _playersList)
         {
-            if (player.state == Player.State.JAILED)
+            if (player.PlayerState == Player.State.JAILED)
                 player.ReduceJail(1);
         }
     }

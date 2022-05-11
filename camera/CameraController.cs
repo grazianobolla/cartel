@@ -10,7 +10,7 @@ public class CameraController : Camera
 
 
     public enum State { OVERVIEW, FOCUS };
-    public State currentState { get; private set; } = State.OVERVIEW;
+    public State CurrentState { get; private set; } = State.OVERVIEW;
 
     private Transform _overviewTransform;
     private Spatial _target;

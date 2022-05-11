@@ -66,7 +66,7 @@ public class GameTemplate
 
         foreach (Tile tile in boardList)
         {
-            switch (tile.type)
+            switch (tile.TileType)
             {
                 case Tile.Type.PROPERTY:
                     {

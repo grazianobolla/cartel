@@ -8,8 +8,8 @@ public partial class Game : Spatial
     [Signal] private delegate void FinishedInteraction();
 
     public enum State { WAITING, MOVING, PROCESSING, INTERACTING };
-    public State currentState { get; private set; } = State.WAITING;
-    public int currentPlayerId { get; private set; } = 0;
+    public State CurrentState { get; private set; } = State.WAITING;
+    public int CurrentPlayerId { get; private set; } = 0;
 
     private Controller _controller;
     private GameTemplate _template;
@@ -57,7 +57,7 @@ public partial class Game : Spatial
     //Called when a player requests an interaction with the game
     private void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array arguments)
     {
-        if (currentPlayerId != playerId)
+        if (CurrentPlayerId != playerId)
             return;
 
         switch (action)
@@ -67,7 +67,7 @@ public partial class Game : Spatial
                 break;
 
             default:
-                if (currentState != State.INTERACTING)
+                if (CurrentState != State.INTERACTING)
                     return;
 
                 if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
@@ -82,7 +82,7 @@ public partial class Game : Spatial
     {
         Player player = GetCurrentPlayer();
 
-        if (currentState != State.WAITING)
+        if (CurrentState != State.WAITING)
             return;
 
         //Iterates players and checks for things like
@@ -95,13 +95,13 @@ public partial class Game : Spatial
         await ToSignal(GetTree().CreateTimer(1), "timeout");
 
         //Player moves
-        currentState = State.MOVING;
+        CurrentState = State.MOVING;
         await MoveState(player, diceNumber);
 
         //Process landing, does things like
         //charge player depending on landing tile,
         //sending the player to prision etc.
-        currentState = State.PROCESSING;
+        CurrentState = State.PROCESSING;
         await _tileInteractor.ProcessLanding(player, _template);
 
         await ToSignal(GetTree().CreateTimer(2), "timeout");
@@ -110,7 +110,7 @@ public partial class Game : Spatial
         //with an intreaction menu.
         if (player.CanPlay())
         {
-            currentState = State.INTERACTING;
+            CurrentState = State.INTERACTING;
             _tileInteractor.EnableTileSelection();
             await ToSignal(this, nameof(FinishedInteraction));
             _tileInteractor.DisableTileSelection();
@@ -123,29 +123,29 @@ public partial class Game : Spatial
         while (GetCurrentPlayer().CanPlay() == false)
             NextPlayerTurn();
 
-        currentState = State.WAITING;
+        CurrentState = State.WAITING;
     }
 
     private async Task MoveState(Player player, int moveAmount)
     {
-        int initialIndex = player.index;
+        int initialIndex = player.Index;
         await player.Move(moveAmount);
-        if (player.index <= initialIndex)
+        if (player.Index <= initialIndex)
         {
             //TODO: load from template
             player.Money += 200;
-            Print("player ", player.id, " get start bonus");
+            Print("player ", player.Id, " get start bonus");
         }
     }
 
     private Player GetCurrentPlayer()
     {
-        return _playerManager.GetPlayer(currentPlayerId);
+        return _playerManager.GetPlayer(CurrentPlayerId);
     }
 
     private void NextPlayerTurn()
     {
-        currentPlayerId = _playerManager.GetNextId(currentPlayerId);
+        CurrentPlayerId = _playerManager.GetNextId(CurrentPlayerId);
     }
 
     private uint GetDiceNumber()

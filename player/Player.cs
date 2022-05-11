@@ -9,20 +9,20 @@ public class Player : Spatial
 
     public enum State { PLAYING, JAILED };
 
-    public int id { get; private set; } = 0;
-    public int index { get; private set; } = 0;
-    public List<Tile> ownedTiles { get; } = new List<Tile>();
-    public State state { get; private set; } = State.PLAYING;
-    public int jailTime { get; private set; } = 0;
+    public int Id { get; private set; } = 0;
+    public int Index { get; private set; } = 0;
+    public List<Tile> OwnedTiles { get; } = new List<Tile>();
+    public State PlayerState { get; private set; } = State.PLAYING;
+    public int JailTime { get; private set; } = 0;
 
     private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
 
     public void Initialize(int id, int money)
     {
-        this.id = id;
+        this.Id = id;
         this.Money = money;
-        this.Translation = Board.GetTileTransform(index).origin + _posOffset;
+        this.Translation = Board.GetTileTransform(Index).origin + _posOffset;
 
         UpdateMesh(Utils.GetRandomColor());
     }
@@ -31,15 +31,15 @@ public class Player : Spatial
     {
         Print("moving by ", amount, " places");
         await AnimateForward(amount);
-        index = Board.GetShiftedIndex(index, amount);
+        Index = Board.GetShiftedIndex(Index, amount);
     }
 
     public int GetDistanceTo(int toIndex)
     {
-        if (toIndex >= index)
-            return toIndex - index;
+        if (toIndex >= Index)
+            return toIndex - Index;
 
-        return (int)(Board.boardSize - (index - toIndex));
+        return (int)(Board.Size - (Index - toIndex));
     }
 
     public async Task MoveTo(int toIndex)
@@ -50,9 +50,9 @@ public class Player : Spatial
 
     public void AddTile(Tile tile)
     {
-        if (!ownedTiles.Contains(tile))
+        if (!OwnedTiles.Contains(tile))
         {
-            ownedTiles.Add(tile);
+            OwnedTiles.Add(tile);
             return;
         }
 
@@ -61,33 +61,33 @@ public class Player : Spatial
 
     public void RemoveTile(Tile tile)
     {
-        ownedTiles.Remove(tile);
+        OwnedTiles.Remove(tile);
     }
 
     public async Task Jail(int jailTileIndex)
     {
         //TODO: load from template or somewhere else
-        jailTime = 3;
-        state = State.JAILED;
+        JailTime = 3;
+        PlayerState = State.JAILED;
         await MoveTo(jailTileIndex);
     }
 
     public void ReduceJail(int turns)
     {
-        jailTime = Mathf.Max(jailTime - turns, 0);
+        JailTime = Mathf.Max(JailTime - turns, 0);
 
-        if (jailTime <= 0)
-            state = State.PLAYING;
+        if (JailTime <= 0)
+            PlayerState = State.PLAYING;
     }
 
     public bool CanPlay()
     {
-        return state != State.JAILED;
+        return PlayerState != State.JAILED;
     }
 
     public bool HasGroup(int group)
     {
-        int count = ownedTiles.FindAll(tile => tile.Group == group).Count;
+        int count = OwnedTiles.FindAll(tile => tile.Data.Group == group).Count;
         return count == Board.GetTileGroupCount(group);
     }
 
@@ -97,10 +97,10 @@ public class Player : Spatial
         set
         {
             _money = value;
-            EmitSignal(nameof(MoneyChange), id, _money);
+            EmitSignal(nameof(MoneyChange), Id, _money);
             if (_money < 1)
             {
-                Print("player ", id, " lost!");
+                Print("player ", Id, " lost!");
             }
         }
     }
@@ -116,7 +116,7 @@ public class Player : Spatial
 
         for (int i = 0; i < amount + 1; i++)
         {
-            int tileIndex = index + i;
+            int tileIndex = Index + i;
 
             //TODO: Gets tile position and interpolates player
             //probably shoudl't directly interpolate to the tile transform

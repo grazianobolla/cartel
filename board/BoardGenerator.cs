@@ -71,7 +71,7 @@ public class BoardGenerator : Node
             var sideList = _boardList.GetRange(sideArrayStart, boardSideLenght);
 
             //sets the first element of the array to a corner type
-            sideList[0].type = Tile.Type.CORNER;
+            sideList[0].TileType = Tile.Type.CORNER;
             sideList.RemoveAt(0);
 
             var tileTypeList = GetRandomTileTypeList(propertyCount, stateCount, chanceCount);
@@ -82,7 +82,7 @@ public class BoardGenerator : Node
 
             for (int i = 0; i < sideList.Count; i++)
             {
-                sideList[i].type = tileTypeList[i];
+                sideList[i].TileType = tileTypeList[i];
             }
         }
     }

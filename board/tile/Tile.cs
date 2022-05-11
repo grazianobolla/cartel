@@ -1,37 +1,19 @@
 using Godot;
 using System;
 
-public struct TileData
-{
-    public String label { get; }
-    public int price { get; }
-    public int houses { get; set; }
-    public int group { get; }
-    public Color color { get; }
-
-    public TileData(String label, int price, int group, Color color)
-    {
-        this.label = label;
-        this.price = price;
-        this.houses = 0;
-        this.group = group;
-        this.color = color;
-    }
-}
-
 public class Tile : Spatial
 {
-    private const int MAX_HOUSE_COUNT = 4;
-
     public enum Type { NONE, CORNER, PROPERTY, STATE, CHANCE };
-    public Type type { get; set; } = Type.NONE;
-    public int index { get; private set; } = 0;
-    public Player owner { get; set; } = null;
 
-    private TileData _data;
+    public Type TileType { get; set; } = Type.NONE;
+    public int Index { get; private set; } = 0;
+    public Player PlayerOwner { get; set; } = null;
+    public TileData Data { get; private set; }
+
     private Vector3 _defaultPosition;
     private Tween _tween;
     private AnimationPlayer _animationPlayer;
+    private const int MAX_HOUSE_COUNT = 4;
 
     public override void _Ready()
     {
@@ -42,8 +24,8 @@ public class Tile : Spatial
 
     public void Initialize(TileData data, int index)
     {
-        this._data = data;
-        this.index = index;
+        Data = data;
+        Index = index;
         UpdateVisual();
     }
 
@@ -51,48 +33,23 @@ public class Tile : Spatial
     {
         //FIXME: what happens if the player loses connection and reconnects??
         //the saved player will not be the same and this will not work:
-        return player == owner;
-    }
-
-    public int Group
-    {
-        get { return _data.group; }
-    }
-
-    public int GetFee()
-    {
-        return _data.houses * 10;
+        return player == PlayerOwner;
     }
 
     public bool IsBuyable()
     {
-        return type == Type.PROPERTY || type == Type.STATE;
-    }
-
-    public int GetPrice()
-    {
-        return _data.price;
-    }
-
-    public String GetLabel()
-    {
-        return _data.label;
-    }
-
-    public int GetHousePrice()
-    {
-        return 100;
+        return TileType == Type.PROPERTY || TileType == Type.STATE;
     }
 
     public bool AddHouse()
     {
-        if (type != Type.PROPERTY)
+        if (TileType != Type.PROPERTY)
             return false;
 
-        if (_data.houses >= MAX_HOUSE_COUNT)
+        if (Data.HouseCount >= MAX_HOUSE_COUNT)
             return false;
 
-        _data.houses += 1;
+        Data.HouseCount += 1;
 
         //TODO: properly spawn model
         Spatial houseModel = Utils.SpawnModel(this, "res://resources/models/defaultHouseModel.tscn");
@@ -130,11 +87,11 @@ public class Tile : Spatial
 
     private void UpdateVisual()
     {
-        switch (this.type)
+        switch (this.TileType)
         {
             case Type.PROPERTY:
-                SetGroupMesh(_data.color);
-                SetText(_data.label);
+                SetGroupMesh(Data.Color);
+                SetText(Data.Label);
                 break;
 
             case Type.STATE:
@@ -165,12 +122,12 @@ public class Tile : Spatial
             switch (eventButton.ButtonIndex)
             {
                 case (int)ButtonList.Left:
-                    GetNode<Controller>("/root/Controller").SendDebugShakeMethod(index);
+                    GetNode<Controller>("/root/Controller").SendDebugShakeMethod(Index);
                     break;
 
                 case (int)ButtonList.Middle:
                     SetOwnerIndicator(true, Colors.RebeccaPurple);
-                    GetNode<TextEdit>("/root/Game/DebugPanel/VBoxContainer/HBoxContainer2/TextEdit").Text = index.ToString();
+                    GetNode<TextEdit>("/root/Game/DebugPanel/VBoxContainer/HBoxContainer2/TextEdit").Text = Index.ToString();
                     break;
 
                 case (int)ButtonList.WheelDown:

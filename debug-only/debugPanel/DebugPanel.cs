@@ -17,12 +17,12 @@ public class DebugPanel : Control
 
     private void _on_ShakeButton_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.SHAKE, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.SHAKE, null);
     }
 
     private void _on_BuyButton_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUY, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUY, null);
     }
 
     private void _on_BuyHouseButton_pressed()
@@ -30,12 +30,12 @@ public class DebugPanel : Control
         int index = 0;
         int.TryParse(GetNode<TextEdit>("VBoxContainer/HBoxContainer2/TextEdit").Text, out index);
         Godot.Collections.Array dataArray = new Godot.Collections.Array { index };
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUY_HOUSE, dataArray);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUY_HOUSE, dataArray);
     }
 
     private void _on_OmitButton_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.OMIT, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.OMIT, null);
     }
 
     private void _on_AddPlayer_pressed()
@@ -55,11 +55,11 @@ public class DebugPanel : Control
 
     private void _on_Left_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUTTON_LEFT, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUTTON_LEFT, null);
     }
 
     private void _on_Right_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.currentPlayerId, Controller.Action.BUTTON_RIGHT, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUTTON_RIGHT, null);
     }
 }
