@@ -28,10 +28,11 @@ public class TileSelector : Node
         Enabled = false;
     }
 
-    public void Next()
+    public void Move(bool forward)
     {
         Board.GetTile(CurrentIndex).Highlight(false);
-        CurrentIndex = Board.GetShiftedIndex(CurrentIndex, 1);
+        CurrentIndex = Board.GetShiftedIndex(CurrentIndex, forward ? 1 : -1);
+        GD.Print(CurrentIndex);
         Board.GetTile(CurrentIndex).Highlight(true);
     }
 }

@@ -15,7 +15,7 @@ public static class Board
     public static int GetShiftedIndex(int start, int steps)
     {
         int size = _boardList.Count;
-        return (steps + start) % size;
+        return Mathf.PosMod(start + steps, size);
     }
 
     public static Tile GetTile(int index)

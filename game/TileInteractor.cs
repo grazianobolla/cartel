@@ -34,8 +34,11 @@ public class TileInteractor : Node
                 return true;
 
             case Controller.Action.BUTTON_LEFT:
+                _tileSelector.Move(false);
+                return false;
+
             case Controller.Action.BUTTON_RIGHT:
-                _tileSelector.Next();
+                _tileSelector.Move(true);
                 return false;
 
             default:
