@@ -8,18 +8,18 @@ public class Tile : Spatial
     public Type TileType { get; set; } = Type.NONE;
     public int Index { get; private set; } = 0;
     public Player PlayerOwner { get; set; } = null;
-    public TileData Data { get; private set; }
+    public TileData Data { get; private set; } = null;
 
-    private Vector3 _defaultPosition;
-    private Tween _tween;
-    private AnimationPlayer _animationPlayer;
     private const int MAX_HOUSE_COUNT = 4;
+    private Vector3 _defaultPosition;
+    private AnimationPlayer _animationPlayer;
+    private Tween _tween;
 
     public override void _Ready()
     {
-        _tween = (Tween)GetNode("Tween");
         _defaultPosition = this.Transform.origin;
         _animationPlayer = (AnimationPlayer)GetNode("AnimationPlayer");
+        _tween = (Tween)GetNode("Tween");
     }
 
     public void Initialize(TileData data, int index)

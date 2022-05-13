@@ -30,7 +30,6 @@ size = Vector3( 0.5, 0.2, 2.3 )
 
 [sub_resource type="SpatialMaterial" id=7]
 resource_local_to_scene = true
-albedo_color = Color( 0.952941, 0.364706, 1, 1 )
 
 [sub_resource type="ViewportTexture" id=12]
 viewport_path = NodePath("Viewport")
@@ -112,6 +111,7 @@ shape = SubResource( 5 )
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform( 0.7, 0, 0, 0, -3.0598e-08, 1, 0, -0.7, -4.37114e-08, 0, 0.1, -1.41561e-07 )
 modulate = Color( 0.772549, 0.313726, 0.8, 1 )
+alpha_cut = 2
 texture = ExtResource( 4 )
 
 [node name="Tween" type="Tween" parent="."]

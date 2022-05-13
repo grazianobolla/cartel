@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using static Godot.GD;
 
-public class Player : Spatial
+public partial class Player : Spatial
 {
     [Signal] public delegate void MoneyChange(int id, int money);
 
@@ -19,6 +19,11 @@ public class Player : Spatial
     private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
 
+    public override void _Process(float delta)
+    {
+        StickToCurrentTile();
+    }
+
     public void Initialize(int id, int money)
     {
         this.Id = id;
@@ -28,27 +33,6 @@ public class Player : Spatial
         var randomColor = Utils.GetRandomColor();
         this.Color = randomColor;
         UpdateMesh(randomColor);
-    }
-
-    public async Task Move(int amount)
-    {
-        Print("moving by ", amount, " places");
-        await AnimateForward(amount);
-        Index = Board.GetShiftedIndex(Index, amount);
-    }
-
-    public int GetDistanceTo(int toIndex)
-    {
-        if (toIndex >= Index)
-            return toIndex - Index;
-
-        return (int)(Board.Size - (Index - toIndex));
-    }
-
-    public async Task MoveTo(int toIndex)
-    {
-        int amount = GetDistanceTo(toIndex);
-        await Move(amount);
     }
 
     public void AddTile(Tile tile)
@@ -110,7 +94,7 @@ public class Player : Spatial
 
     public void UpdateMesh(Color color)
     {
-        GetNode<MeshInstance>("MeshInstance").GetSurfaceMaterial(0).Set("albedo_color", color);
+        GetNode<MeshInstance>("Mesh").GetSurfaceMaterial(0).Set("albedo_color", color);
     }
 
     private async Task AnimateForward(int amount, float stepTime = .2f)

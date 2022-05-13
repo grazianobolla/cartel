@@ -3,12 +3,12 @@ using System;
 
 public class TileData
 {
-    public String Label { get; private set; }
-    public int Group { get; private set; }
-    public Color Color { get; private set; }
+    public String Label { get; private set; } = "No Label";
+    public int Group { get; private set; } = -1;
+    public Color Color { get; private set; } = Colors.White;
 
-    private int _price;
-    public int _houseCount;
+    private int _price = 0;
+    public int _houseCount = 0;
 
     public TileData() { }
 

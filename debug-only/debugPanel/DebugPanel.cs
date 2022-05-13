@@ -13,6 +13,11 @@ public class DebugPanel : Control
         _game = (Game)GetParent();
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
         _camera = (CameraController)GetNode("/root/Game/GameCamera");
+
+        // if (OS.GetName() == "HTML5")
+        // {
+        //     Visible = false;
+        // }
     }
 
     private void _on_ShakeButton_pressed()

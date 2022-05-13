@@ -36,7 +36,7 @@ public class DebugInfo : Control
             Player player = _playerManager.GetPlayer(i);
 
             DrawString(_defaultFont, new Vector2(8, 16 * i + 64),
-            $"player {player.Id}, index {player.Index}, state {player.PlayerState}, money {player.Money}, props. {player.OwnedTiles.Count}, jail {player.JailTime}, canPlay() {player.CanPlay()}"
+            $"player {player.Id}, index {player.Index}, state {player.PlayerState}, money {player.Money}, props. {player.OwnedTiles.Count}, jailTime {player.JailTime}, canPlay() {player.CanPlay()}"
             );
         }
     }

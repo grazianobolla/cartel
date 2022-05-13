@@ -14,8 +14,10 @@ public class TileSelector : Node
         _camera = (CameraController)GetNode(_cameraPath);
     }
 
-    public void Enable()
+    public void Enable(int index)
     {
+        CurrentIndex = index;
+
         _camera.Overview();
         Board.GetTile(CurrentIndex).Highlight(true);
         Enabled = true;
@@ -24,7 +26,6 @@ public class TileSelector : Node
     public void Disable()
     {
         Board.GetTile(CurrentIndex).Highlight(false);
-        CurrentIndex = 0;
         Enabled = false;
     }
 

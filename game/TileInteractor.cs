@@ -155,9 +155,9 @@ public class TileInteractor : Node
         return false;
     }
 
-    public void EnableTileSelection()
+    public void EnableTileSelection(int index = 0)
     {
-        _tileSelector.Enable();
+        _tileSelector.Enable(index);
     }
 
     public void DisableTileSelection()

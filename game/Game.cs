@@ -5,6 +5,7 @@ using static Godot.GD;
 
 public partial class Game : Spatial
 {
+    [Signal] public delegate void StartedTurn();
     [Signal] private delegate void FinishedInteraction();
 
     public enum State { WAITING, MOVING, PROCESSING, INTERACTING };
@@ -89,13 +90,10 @@ public partial class Game : Spatial
         //First state of the cycle
         CurrentState = State.MOVING;
 
-        //Iterates players and checks for things like
-        //jail time reduction etc.
-        _playerManager.CheckTurn();
+        EmitSignal(nameof(StartedTurn));
 
         //Camera focus the player
         _camera.Focus(player);
-
         await ToSignal(GetTree().CreateTimer(1), "timeout");
 
         //Player moves
@@ -108,8 +106,7 @@ public partial class Game : Spatial
         //charge player depending on landing tile,
         //sending the player to prision etc.
         await _tileInteractor.ProcessLanding(player, _template);
-
-        await ToSignal(GetTree().CreateTimer(2), "timeout");
+        await ToSignal(GetTree().CreateTimer(1), "timeout");
 
         //If the player is allowed to play, it is presented
         //with an intreaction menu.
@@ -117,10 +114,12 @@ public partial class Game : Spatial
         {
             //Third state of the cycle
             CurrentState = State.INTERACTING;
-            _tileInteractor.EnableTileSelection();
+            _tileInteractor.EnableTileSelection(player.Index);
             await ToSignal(this, nameof(FinishedInteraction));
             _tileInteractor.DisableTileSelection();
         }
+
+        _camera.Overview();
 
         NextPlayerTurn();
 
@@ -153,6 +152,7 @@ public partial class Game : Spatial
     private void NextPlayerTurn()
     {
         CurrentPlayerId = _playerManager.GetNextId(CurrentPlayerId);
+        Print("turn of player ", CurrentPlayerId);
     }
 
     private uint GetDiceNumber()

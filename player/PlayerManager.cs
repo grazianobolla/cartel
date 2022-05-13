@@ -9,6 +9,11 @@ public class PlayerManager : Node
     private List<Player> _playersList { get; } = new List<Player>();
     private PackedScene _playerScene = (PackedScene)GD.Load("res://player/player.tscn");
 
+    public override void _Ready()
+    {
+        GetNode("/root/Game").Connect("StartedTurn", this, "OnGameTurnStart");
+    }
+
     public void AddPlayer(int startingMoney)
     {
         Player player = (Player)_playerScene.Instance();
@@ -24,7 +29,6 @@ public class PlayerManager : Node
     public int GetNextId(int currentId)
     {
         int id = (currentId + 1) % _playersList.Count;
-        Print("turn of player ", currentId);
         return id;
     }
 
@@ -42,13 +46,21 @@ public class PlayerManager : Node
         Print($"player {from.Id} transfered ${amount} to player {to.Id}");
     }
 
-    public void CheckTurn()
+    private void OnGameTurnStart()
+    {
+        CheckTurn();
+    }
+
+    //Called at the start of every turn.
+    private void CheckTurn()
     {
         foreach (Player player in _playersList)
         {
             if (player.PlayerState == Player.State.JAILED)
                 player.ReduceJail(1);
         }
+
+        Print("checking turns");
     }
 
     //TODO: remove or improve, used only by DebugInfo.cs
