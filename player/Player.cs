@@ -92,7 +92,7 @@ public partial class Player : Spatial
         }
     }
 
-    public void UpdateMesh(Color color)
+    private void UpdateMesh(Color color)
     {
         GetNode<MeshInstance>("Mesh").GetSurfaceMaterial(0).Set("albedo_color", color);
     }

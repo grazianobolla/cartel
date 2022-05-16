@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Godot;
 using static Godot.GD;
 
-public class TileInteractor : Node
+public class TileInteraction : Node
 {
     [Signal] public delegate void OnChanceLanding(int playerId, string text, int cost);
 

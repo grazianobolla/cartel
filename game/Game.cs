@@ -15,13 +15,13 @@ public partial class Game : Spatial
     private Controller _controller;
     private GameTemplate _template;
     private PlayerManager _playerManager;
-    private TileInteractor _tileInteractor;
+    private TileInteraction _tileInteractor;
     private CameraController _camera;
 
     public override void _Ready()
     {
         _controller = (Controller)GetNode("/root/Controller");
-        _tileInteractor = (TileInteractor)GetNode("TileInteractor");
+        _tileInteractor = (TileInteraction)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
 
@@ -70,10 +70,8 @@ public partial class Game : Spatial
             default:
                 if (CurrentState == State.INTERACTING)
                 {
-
                     if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
                         EmitSignal(nameof(FinishedInteraction));
-
                 }
                 break;
         }

@@ -6,9 +6,9 @@ using static Godot.GD;
 public class Controller : Node
 {
     [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Collections.Array arguments);
-    [Signal] public delegate void DebugShake(int index);
+    [Signal] public delegate void DebugShake(int index); //TODO: remove
 
-    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT, BUTTON_LEFT, BUTTON_RIGHT };
+    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT, BUTTON_LEFT, BUTTON_RIGHT, ACCEPT_TRADE, REJECT_TRADE };
 
     private AirConsole _airConsole;
 
