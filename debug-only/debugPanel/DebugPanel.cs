@@ -54,23 +54,35 @@ public class DebugPanel : Control
 
     private void _on_CameraFocus_pressed()
     {
-        _camera.Focus(_playerManager.GetPlayer(0));
+        _camera.Focus(PlayerManager.GetPlayer(0));
     }
 
     private void _on_Left_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUTTON_LEFT, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.TILE_SELECTOR_BKW, null);
     }
 
     private void _on_Right_pressed()
     {
-        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUTTON_RIGHT, null);
+        _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.TILE_SELECTOR_FWD, null);
     }
 
     private async void _on_Dialog_pressed()
     {
         int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
-        var response = await _dialog.ShowDialog(_playerManager.GetPlayer(id));
+        var response = await _dialog.ShowDialog(PlayerManager.GetPlayer(id));
         GD.Print("player said ", response, " to dialog!");
+    }
+
+    private void _on_DialogCancel_pressed()
+    {
+        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
+        _controller.SendDebugControllerMessage(id, Controller.Action.DIALOG_CANCEL, null);
+    }
+
+    private void _on_DialogAccept_pressed()
+    {
+        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
+        _controller.SendDebugControllerMessage(id, Controller.Action.DIALOG_ACCEPT, null);
     }
 }

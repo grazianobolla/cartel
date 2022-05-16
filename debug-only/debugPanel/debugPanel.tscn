@@ -95,6 +95,24 @@ margin_bottom = 25.0
 size_flags_horizontal = 3
 text = "0"
 
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 261.0
+margin_right = 198.0
+margin_bottom = 286.0
+
+[node name="DialogAccept" type="Button" parent="VBoxContainer/HBoxContainer5"]
+margin_right = 97.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+text = "Accept"
+
+[node name="DialogCancel" type="Button" parent="VBoxContainer/HBoxContainer5"]
+margin_left = 101.0
+margin_right = 198.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+text = "Cancel"
+
 [connection signal="pressed" from="VBoxContainer/AddPlayer" to="." method="_on_AddPlayer_pressed"]
 [connection signal="pressed" from="VBoxContainer/ShakeButton" to="." method="_on_ShakeButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/OmitButton" to="." method="_on_OmitButton_pressed"]
@@ -105,3 +123,5 @@ text = "0"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/Forward" to="." method="_on_Right_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/Backwards" to="." method="_on_Left_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer4/Dialog" to="." method="_on_Dialog_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/DialogAccept" to="." method="_on_DialogAccept_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer5/DialogCancel" to="." method="_on_DialogCancel_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://board/BoardGenerator.cs" type="Script" id=1]
 [ext_resource path="res://game/Game.cs" type="Script" id=2]
@@ -6,11 +6,12 @@
 [ext_resource path="res://player/PlayerManager.cs" type="Script" id=4]
 [ext_resource path="res://debug-only/debugPanel/debugPanel.tscn" type="PackedScene" id=5]
 [ext_resource path="res://debug-only/debugInfo/DebugInfo.tscn" type="PackedScene" id=6]
-[ext_resource path="res://game/TileInteractor.cs" type="Script" id=7]
+[ext_resource path="res://game/PlayerTileInteraction.cs" type="Script" id=7]
 [ext_resource path="res://scripts/freelookCamera.gd" type="Script" id=8]
 [ext_resource path="res://airconsole/AirConsoleInterface.cs" type="Script" id=9]
 [ext_resource path="res://game/TileSelector.cs" type="Script" id=10]
 [ext_resource path="res://game/DialogManager.cs" type="Script" id=11]
+[ext_resource path="res://game/PlayerInteraction.cs" type="Script" id=12]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 35, 1, 35 )
@@ -33,7 +34,8 @@ script = ExtResource( 4 )
 
 [node name="TileInteractor" type="Node" parent="."]
 script = ExtResource( 7 )
-playerManagerPath = NodePath("../PlayerManager")
+_dialogManagerPath = NodePath("../DialogManager")
+_playerInteractionPath = NodePath("../PlayerInteraction")
 
 [node name="TileSelector" type="Node" parent="TileInteractor"]
 script = ExtResource( 10 )
@@ -42,6 +44,10 @@ _cameraPath = NodePath("../../GameCamera")
 [node name="DialogManager" type="Node" parent="."]
 script = ExtResource( 11 )
 _airConsoleInterfacePath = NodePath("../AirConsoleInterface")
+
+[node name="PlayerInteraction" type="Node" parent="."]
+script = ExtResource( 12 )
+_dialogManagerPath = NodePath("../DialogManager")
 
 [node name="TileGroup" type="Spatial" parent="."]
 

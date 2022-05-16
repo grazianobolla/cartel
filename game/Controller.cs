@@ -8,7 +8,13 @@ public class Controller : Node
     [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Collections.Array arguments);
     [Signal] public delegate void DebugShake(int index);
 
-    public enum Action { NONE, SHAKE, BUY, BUY_HOUSE, OMIT, BUTTON_LEFT, BUTTON_RIGHT, DIALOG_ACCEPT, DIALOG_CANCEL, SELECT_TILE };
+    public enum Action
+    {
+        NONE, SHAKE, BUY, BUY_HOUSE, OMIT,
+        TILE_SELECTOR_FWD, TILE_SELECTOR_BKW,
+        DIALOG_ACCEPT, DIALOG_CANCEL,
+        SELECT_TILE, TRADE
+    };
 
     private AirConsole _airConsole;
 

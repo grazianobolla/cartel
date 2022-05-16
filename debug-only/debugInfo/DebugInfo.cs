@@ -27,13 +27,13 @@ public class DebugInfo : Control
 
     public override void _Draw()
     {
-        DrawString(_defaultFont, new Vector2(8, 16), $"current player {_game.CurrentPlayerId}, current state {_game.CurrentState}");
+        DrawString(_defaultFont, new Vector2(8, 16), $"current player {_game.CurrentPlayerId}, current state {_game.CurrentState}, awaitingInteraction, {_game.AwaitingInteraction}");
         DrawString(_defaultFont, new Vector2(8, 32), $"camera state {_camera.CurrentState}, fov {_camera.Fov}");
         DrawString(_defaultFont, new Vector2(8, 48), $"tile selector index {_tileSelector.CurrentIndex} enabled {_tileSelector.Enabled}");
 
         for (int i = 0; i < _playerManager.PlayerList.Count; i++)
         {
-            Player player = _playerManager.GetPlayer(i);
+            Player player = PlayerManager.GetPlayer(i);
 
             DrawString(_defaultFont, new Vector2(8, 16 * i + 64),
             $"player {player.Id}, index {player.Index}, state {player.PlayerState}, money {player.Money}, props. {player.OwnedTiles.Count}, jailTime {player.JailTime}, canPlay() {player.CanPlay()}"

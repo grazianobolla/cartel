@@ -8,7 +8,7 @@ public class TileData
     public Color Color { get; private set; } = Colors.White;
 
     private int _price = 0;
-    public int _houseCount = 0;
+    private int _houseCount = 0;
 
     public TileData() { }
 

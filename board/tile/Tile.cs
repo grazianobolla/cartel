@@ -7,10 +7,11 @@ public class Tile : Spatial
 
     public Type TileType { get; set; } = Type.NONE;
     public int Index { get; private set; } = 0;
-    public Player PlayerOwner { get; set; } = null;
     public TileData Data { get; private set; } = null;
 
     private const int MAX_HOUSE_COUNT = 4;
+
+    private Player _owner = null;
     private Vector3 _defaultPosition;
     private AnimationPlayer _animationPlayer;
     private Tween _tween;
@@ -29,6 +30,17 @@ public class Tile : Spatial
         UpdateVisual();
     }
 
+    public Player PlayerOwner
+    {
+        set
+        {
+            _owner = value;
+            if (value == null) { SetOwnerIndicator(false, Colors.White); }
+            else { SetOwnerIndicator(true, value.Color); }
+        }
+
+        get { return _owner; }
+    }
     public bool IsOwner(Player player)
     {
         //FIXME: what happens if the player loses connection and reconnects??

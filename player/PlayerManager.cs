@@ -6,7 +6,7 @@ public class PlayerManager : Node
 {
     [Signal] public delegate void AddedPlayer(Player player, int playerCount);
 
-    private List<Player> _playersList { get; } = new List<Player>();
+    private static List<Player> _playersList { get; } = new List<Player>();
     private PackedScene _playerScene = (PackedScene)GD.Load("res://player/player.tscn");
 
     public override void _Ready()
@@ -32,18 +32,10 @@ public class PlayerManager : Node
         return id;
     }
 
-    public Player GetPlayer(int id)
+    public static Player GetPlayer(int id)
     {
         //TODO: might have to change this if a player disconnects
         return _playersList[id];
-    }
-
-    public void TransferMoney(Player from, Player to, int amount)
-    {
-        //TODO: check if the player has money
-        from.Money -= amount;
-        to.Money += amount;
-        Print($"player {from.Id} transfered ${amount} to player {to.Id}");
     }
 
     private void OnGameTurnStart()

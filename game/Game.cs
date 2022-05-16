@@ -11,17 +11,20 @@ public partial class Game : Spatial
     public enum State { WAITING, MOVING, PROCESSING, INTERACTING };
     public State CurrentState { get; private set; } = State.WAITING;
     public int CurrentPlayerId { get; private set; } = 0;
+    public bool AwaitingInteraction { get; private set; } = false;
 
     private Controller _controller;
     private GameTemplate _template;
     private PlayerManager _playerManager;
-    private TileInteractor _tileInteractor;
+    private PlayerTileInteraction _tileInteractor;
     private CameraController _camera;
+
+
 
     public override void _Ready()
     {
         _controller = (Controller)GetNode("/root/Controller");
-        _tileInteractor = (TileInteractor)GetNode("TileInteractor");
+        _tileInteractor = (PlayerTileInteraction)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
 
@@ -56,8 +59,11 @@ public partial class Game : Spatial
     }
 
     //Called when a player requests an interaction with the game
-    private void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array arguments)
+    private async void OnReceiveAction(int playerId, Controller.Action action, Godot.Collections.Array arguments)
     {
+        if (AwaitingInteraction)
+            return;
+
         if (CurrentPlayerId != playerId)
             return;
 
@@ -70,10 +76,13 @@ public partial class Game : Spatial
             default:
                 if (CurrentState == State.INTERACTING)
                 {
+                    AwaitingInteraction = true;
+                    bool finished = await _tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments);
 
-                    if (_tileInteractor.ProcessInteraction(GetCurrentPlayer(), action, arguments))
+                    if (finished)
                         EmitSignal(nameof(FinishedInteraction));
 
+                    AwaitingInteraction = false;
                 }
                 break;
         }
@@ -146,7 +155,7 @@ public partial class Game : Spatial
 
     private Player GetCurrentPlayer()
     {
-        return _playerManager.GetPlayer(CurrentPlayerId);
+        return PlayerManager.GetPlayer(CurrentPlayerId);
     }
 
     private void NextPlayerTurn()

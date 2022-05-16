@@ -2,22 +2,25 @@ using System.Threading.Tasks;
 using Godot;
 using static Godot.GD;
 
-public class TileInteractor : Node
+//Handles interaction between tiles-players.
+public class PlayerTileInteraction : Node
 {
-    [Signal] public delegate void OnChanceLanding(int playerId, string text, int cost);
+    [Export] private NodePath _dialogManagerPath;
+    [Export] private NodePath _playerInteractionPath;
 
-    [Export] private NodePath playerManagerPath = null;
-    private PlayerManager _playerManager;
     private TileSelector _tileSelector;
+    private DialogManager _dialogManager;
+    private PlayerInteraction _playerInteraction;
 
     public override void _Ready()
     {
-        _playerManager = (PlayerManager)GetNode(playerManagerPath);
         _tileSelector = (TileSelector)GetNode("TileSelector");
+        _dialogManager = (DialogManager)GetNode(_dialogManagerPath);
+        _playerInteraction = (PlayerInteraction)GetNode(_playerInteractionPath);
     }
 
     //Called when a player interacts with the game (in his turn)
-    public bool ProcessInteraction(Player player, Controller.Action action, Godot.Collections.Array arguments)
+    public async Task<bool> ProcessInteraction(Player player, Controller.Action action, Godot.Collections.Array arguments)
     {
         switch (action)
         {
@@ -33,16 +36,21 @@ public class TileInteractor : Node
             case Controller.Action.OMIT:
                 return true;
 
-            case Controller.Action.BUTTON_LEFT:
-                _tileSelector.Move(false);
+            case Controller.Action.TILE_SELECTOR_FWD:
+                _tileSelector.Move(true);
                 return false;
 
-            case Controller.Action.BUTTON_RIGHT:
-                _tileSelector.Move(true);
+            case Controller.Action.TILE_SELECTOR_BKW:
+                _tileSelector.Move(false);
                 return false;
 
             case Controller.Action.SELECT_TILE:
                 _tileSelector.MoveTo((int)arguments[0]);
+                return false;
+
+            case Controller.Action.TRADE:
+                Tile tile = Board.GetTile(_tileSelector.CurrentIndex);
+                await _playerInteraction.TradeProperty(tile, player, PlayerManager.GetPlayer((int)arguments[0]), (int)arguments[1]);
                 return false;
 
             default:
@@ -65,14 +73,14 @@ public class TileInteractor : Node
                     return;
 
                 Print("landed on someones property, paying ", tile.Data.Fee);
-                _playerManager.TransferMoney(player, tile.PlayerOwner, tile.Data.Fee);
+                PlayerInteraction.TransferMoney(player, tile.PlayerOwner, tile.Data.Fee);
                 break;
 
             case Tile.Type.CHANCE:
                 var chanceData = template.GetRandomChanceData();
-                Print("landed on chance tile cost: ", chanceData.cost);
                 player.Money += chanceData.cost;
-                EmitSignal(nameof(OnChanceLanding), player.Id, chanceData.text, chanceData.cost);
+                string message = $"{chanceData.text}\n{chanceData.cost}";
+                await _dialogManager.ShowDialog(player, message);
                 break;
 
             case Tile.Type.CORNER:
@@ -114,7 +122,6 @@ public class TileInteractor : Node
 
         player.Money -= tile.Data.Price;
         AssignTile(player, tile);
-        tile.SetOwnerIndicator(true, player.Color);
 
         Print("player ", player.Index, " purchased tile ", tile.Data.Label, " at ", tile.Data.Price);
         return true;
@@ -159,17 +166,7 @@ public class TileInteractor : Node
         return false;
     }
 
-    public void EnableTileSelection(int index = 0)
-    {
-        _tileSelector.Enable(index);
-    }
-
-    public void DisableTileSelection()
-    {
-        _tileSelector.Disable();
-    }
-
-    private void AssignTile(Player player, Tile tile)
+    public static void AssignTile(Player player, Tile tile)
     {
         if (tile.PlayerOwner != null)
         {
@@ -178,5 +175,17 @@ public class TileInteractor : Node
 
         tile.PlayerOwner = player;
         player.AddTile(tile);
+
+        Print(tile.Data.Label, " is now owned by player ", player.Id);
+    }
+
+    public void EnableTileSelection(int index = 0)
+    {
+        _tileSelector.Enable(index);
+    }
+
+    public void DisableTileSelection()
+    {
+        _tileSelector.Disable();
     }
 }
