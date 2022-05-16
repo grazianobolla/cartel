@@ -6,6 +6,7 @@ public class DebugPanel : Control
     private Controller _controller;
     private PlayerManager _playerManager;
     private CameraController _camera;
+    private DialogManager _dialog;
 
     public override void _Ready()
     {
@@ -13,6 +14,7 @@ public class DebugPanel : Control
         _game = (Game)GetParent();
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
         _camera = (CameraController)GetNode("/root/Game/GameCamera");
+        _dialog = (DialogManager)GetNode("/root/Game/DialogManager");
 
         // if (OS.GetName() == "HTML5")
         // {
@@ -63,5 +65,12 @@ public class DebugPanel : Control
     private void _on_Right_pressed()
     {
         _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.BUTTON_RIGHT, null);
+    }
+
+    private async void _on_Dialog_pressed()
+    {
+        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
+        var response = await _dialog.ShowDialog(_playerManager.GetPlayer(id));
+        GD.Print("player said ", response, " to dialog!");
     }
 }

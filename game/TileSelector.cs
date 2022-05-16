@@ -35,4 +35,11 @@ public class TileSelector : Node
         CurrentIndex = Board.GetShiftedIndex(CurrentIndex, forward ? 1 : -1);
         Board.GetTile(CurrentIndex).Highlight(true);
     }
+
+    public void MoveTo(int index)
+    {
+        Board.GetTile(CurrentIndex).Highlight(false);
+        CurrentIndex = index;
+        Board.GetTile(CurrentIndex).Highlight(true);
+    }
 }

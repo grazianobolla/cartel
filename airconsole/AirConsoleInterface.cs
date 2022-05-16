@@ -17,6 +17,17 @@ public class AirConsoleInterface : Node
         _tileInteractor.Connect("OnChanceLanding", this, "DisplayChanceCard");
     }
 
+    public void DisplayDialog(int playerId, string text)
+    {
+        if (!_airConsole.ready)
+            return;
+
+        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
+        data.Set("instruction", "display-dialog");
+        data.Set("content", text);
+        _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
+    }
+
     private void OnPlayerAdded(Player player, int playerCount)
     {
         player.Connect("MoneyChange", this, "DisplayUpdateMoney");

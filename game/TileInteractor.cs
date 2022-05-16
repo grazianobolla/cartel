@@ -41,8 +41,12 @@ public class TileInteractor : Node
                 _tileSelector.Move(true);
                 return false;
 
+            case Controller.Action.SELECT_TILE:
+                _tileSelector.MoveTo((int)arguments[0]);
+                return false;
+
             default:
-                PrintErr("unkown action");
+                //PrintErr("unkown action");
                 return false;
         }
     }
