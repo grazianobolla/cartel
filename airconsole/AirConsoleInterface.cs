@@ -5,28 +5,16 @@ public class AirConsoleInterface : Node
 {
     private AirConsole _airConsole;
     private PlayerManager _playerManager;
-    private TileInteraction _tileInteractor;
+    private TileInteractor _tileInteractor;
 
     public override void _Ready()
     {
         _airConsole = (AirConsole)GetNode("/root/AirConsole");
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
-        _tileInteractor = (TileInteraction)GetNode("/root/Game/TileInteractor");
+        _tileInteractor = (TileInteractor)GetNode("/root/Game/TileInteractor");
 
         _playerManager.Connect("AddedPlayer", this, "OnPlayerAdded");
         _tileInteractor.Connect("OnChanceLanding", this, "DisplayChanceCard");
-    }
-
-    public bool ShowTradeDialog(int playerId)
-    {
-        if (!_airConsole.ready)
-            return false;
-
-        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
-        data.Set("instruction", "display-trade-dialog");
-        data.Set("content", "This is a trade dialog.");
-        _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
-        return true;
     }
 
     private void OnPlayerAdded(Player player, int playerCount)

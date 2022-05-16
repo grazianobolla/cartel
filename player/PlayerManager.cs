@@ -46,15 +46,6 @@ public class PlayerManager : Node
         Print($"player {from.Id} transfered ${amount} to player {to.Id}");
     }
 
-    public bool SafeTransferMoney(Player from, Player to, int amount)
-    {
-        if (from.Money < amount)
-            return false;
-
-        TransferMoney(from, to, amount);
-        return true;
-    }
-
     private void OnGameTurnStart()
     {
         CheckTurn();
