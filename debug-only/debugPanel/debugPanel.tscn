@@ -19,10 +19,10 @@ margin_right = -8.0
 margin_bottom = 59.0
 alignment = 1
 
-[node name="AddPlayer" type="Button" parent="VBoxContainer"]
+[node name="StartGame" type="Button" parent="VBoxContainer"]
 margin_right = 198.0
 margin_bottom = 25.0
-text = "Add Player"
+text = "Start Game"
 
 [node name="ShakeButton" type="Button" parent="VBoxContainer"]
 margin_top = 29.0
@@ -113,7 +113,7 @@ margin_bottom = 25.0
 size_flags_horizontal = 3
 text = "Cancel"
 
-[connection signal="pressed" from="VBoxContainer/AddPlayer" to="." method="_on_AddPlayer_pressed"]
+[connection signal="pressed" from="VBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="VBoxContainer/ShakeButton" to="." method="_on_ShakeButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/OmitButton" to="." method="_on_OmitButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/BuyButton" to="." method="_on_BuyButton_pressed"]

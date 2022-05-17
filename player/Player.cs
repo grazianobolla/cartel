@@ -15,6 +15,7 @@ public partial class Player : Spatial
     public State PlayerState { get; private set; } = State.PLAYING;
     public int JailTime { get; private set; } = 0;
     public Color Color { get; private set; } = Colors.White;
+    public string Nickname { get; private set; } = "Jhonny Noname";
 
     private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
@@ -24,12 +25,17 @@ public partial class Player : Spatial
         StickToCurrentTile();
     }
 
-    public void Initialize(int id, int money)
+    public void Initialize(int id, int money, string nickname)
     {
         this.Id = id;
         this.Money = money;
+        this.Nickname = nickname;
+
+        //set player at the start of the board
         this.Translation = Board.GetTileTransform(Index).origin + _posOffset;
 
+        //choose a random color for player mesh
+        //TODO: might want to implement a less random system
         var randomColor = Utils.GetRandomColor();
         this.Color = randomColor;
         UpdateMesh(randomColor);

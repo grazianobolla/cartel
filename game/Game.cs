@@ -18,8 +18,7 @@ public partial class Game : Spatial
     private PlayerManager _playerManager;
     private PlayerTileInteraction _tileInteractor;
     private CameraController _camera;
-
-
+    private AirConsoleInterface _airConsoleInterface;
 
     public override void _Ready()
     {
@@ -27,25 +26,16 @@ public partial class Game : Spatial
         _tileInteractor = (PlayerTileInteraction)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
+        _airConsoleInterface = (AirConsoleInterface)GetNode("AirConsoleInterface");
 
         Randomize();
-        CreateGame();
         ConnectSignals();
-
-        _camera.Overview();
     }
 
     private void ConnectSignals()
     {
         _controller.Connect("OnAction", this, nameof(OnReceiveAction));
         _controller.Connect("DebugShake", this, nameof(OnDebugShake));
-
-        _playerManager.Connect("AddedPlayer", this, "OnPlayerAdded");
-    }
-
-    private void OnPlayerAdded(Player player, int playerCount)
-    {
-        GetNode<AirConsole>("/root/AirConsole").SetActivePlayers(playerCount);
     }
 
     public void CreateGame(String templatePath = "res://templates/template0.json")
@@ -56,6 +46,8 @@ public partial class Game : Spatial
             PrintErr("could not validate template");
 
         GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
+        SpawnPlayers();
+        _camera.Overview();
     }
 
     //Called when a player requests an interaction with the game
@@ -150,6 +142,16 @@ public partial class Game : Spatial
             //TODO: load from template
             player.Money += 200;
             Print("player ", player.Id, " get start bonus");
+        }
+    }
+
+    private void SpawnPlayers()
+    {
+        for (int i = 0; i < _airConsoleInterface.ControllerCount; i++)
+        {
+            int startingMoney = _template.GetStartingMoney();
+            string nickname = _airConsoleInterface.GetPlayerNickname(i);
+            _playerManager.AddPlayer(i, startingMoney, nickname);
         }
     }
 

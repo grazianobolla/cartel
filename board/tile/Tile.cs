@@ -41,11 +41,10 @@ public class Tile : Spatial
 
         get { return _owner; }
     }
+
     public bool IsOwner(Player player)
     {
-        //FIXME: what happens if the player loses connection and reconnects??
-        //the saved player will not be the same and this will not work:
-        return player == PlayerOwner;
+        return player.Id == PlayerOwner.Id;
     }
 
     public bool IsBuyable()
@@ -103,11 +102,11 @@ public class Tile : Spatial
         switch (this.TileType)
         {
             case Type.PROPERTY:
+            case Type.STATE:
                 SetGroupMesh(Data.Color);
                 SetText(Data.Label);
                 break;
 
-            case Type.STATE:
             case Type.CORNER:
             case Type.CHANCE:
             case Type.NONE:

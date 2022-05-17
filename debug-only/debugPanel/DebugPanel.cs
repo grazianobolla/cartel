@@ -42,9 +42,9 @@ public class DebugPanel : Control
         _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.OMIT, null);
     }
 
-    private void _on_AddPlayer_pressed()
+    private void _on_StartGame_pressed()
     {
-        _playerManager.AddPlayer(1000);
+        _game.CreateGame();
     }
 
     private void _on_CameraOverview_pressed()

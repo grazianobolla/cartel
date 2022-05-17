@@ -4,7 +4,7 @@ using static Godot.GD;
 
 public class PlayerManager : Node
 {
-    [Signal] public delegate void AddedPlayer(Player player, int playerCount);
+    [Signal] public delegate void AddedPlayer(Player player);
 
     private static List<Player> _playersList { get; } = new List<Player>();
     private PackedScene _playerScene = (PackedScene)GD.Load("res://player/player.tscn");
@@ -14,16 +14,14 @@ public class PlayerManager : Node
         GetNode("/root/Game").Connect("StartedTurn", this, "OnGameTurnStart");
     }
 
-    public void AddPlayer(int startingMoney)
+    public void AddPlayer(int id, int startingMoney, string nickname)
     {
         Player player = (Player)_playerScene.Instance();
-        EmitSignal(nameof(AddedPlayer), player, _playersList.Count + 1);
-
+        EmitSignal(nameof(AddedPlayer), player);
         AddChild(player);
         _playersList.Add(player);
-        //TODO: id shouldn't be the index of the player
-        player.Initialize(_playersList.Count - 1, startingMoney);
-        Print("added player id ", player.Id, " player count ", _playersList.Count);
+        player.Initialize(id, startingMoney, nickname);
+        Print($"added player {player.Nickname}:{player.Id}");
     }
 
     public int GetNextId(int currentId)

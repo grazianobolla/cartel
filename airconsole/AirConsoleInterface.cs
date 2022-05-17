@@ -3,12 +3,16 @@ using System;
 
 public class AirConsoleInterface : Node
 {
+    public int ControllerCount = 0;
+
     private AirConsole _airConsole;
     private PlayerManager _playerManager;
 
     public override void _Ready()
     {
         _airConsole = (AirConsole)GetNode("/root/AirConsole");
+        _airConsole.Connect("OnConnect", this, nameof(OnControllerConnect));
+        _airConsole.Connect("OnDisconnect", this, nameof(OnControllerDisconnect));
 
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
         _playerManager.Connect("AddedPlayer", this, "OnPlayerAdded");
@@ -25,7 +29,12 @@ public class AirConsoleInterface : Node
         _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
     }
 
-    private void OnPlayerAdded(Player player, int playerCount)
+    public string GetPlayerNickname(int playerId)
+    {
+        return _airConsole.GetNickname(_airConsole.ConvertPlayerNumberToDeviceId(playerId));
+    }
+
+    private void OnPlayerAdded(Player player)
     {
         player.Connect("MoneyChange", this, "DisplayUpdateMoney");
     }
@@ -39,5 +48,17 @@ public class AirConsoleInterface : Node
         data.Set("instruction", "update-money");
         data.Set("content", value);
         _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
+    }
+
+    private void OnControllerConnect(int deviceId)
+    {
+        ControllerCount++;
+        _airConsole.SetActivePlayers(ControllerCount);
+    }
+
+    private void OnControllerDisconnect(int deviceId)
+    {
+        ControllerCount--;
+        //_airConsole.SetActivePlayers(ControllerCount);
     }
 }

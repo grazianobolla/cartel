@@ -7,6 +7,7 @@ public class AirConsole : Node
 {
     [Signal] public delegate void OnMessage(int deviceId, Godot.Object data);
     [Signal] public delegate void OnConnect(int deviceId);
+    [Signal] public delegate void OnDisconnect(int deviceId);
 
     public bool ready = false;
 
@@ -55,6 +56,11 @@ public class AirConsole : Node
         return (int)playerNumber;
     }
 
+    public Godot.Collections.Array GetActivePlayerDeviceIds()
+    {
+        JavaScriptObject array = (JavaScriptObject)SafeCall("getActivePlayerDeviceIds");
+        return array.ToArray();
+    }
 
     public void SetActivePlayers(int maxPlayers)
     {
@@ -66,10 +72,16 @@ public class AirConsole : Node
         SafeCall("message", deviceId, obj);
     }
 
+    public string GetNickname(int deviceId)
+    {
+        return (string)SafeCall("getNickname", deviceId);
+    }
+
     private void ConnectCallbacks()
     {
         _airconsole.Set("onMessage", CreateCallback("cbOnMessage"));
         _airconsole.Set("onConnect", CreateCallback("cbOnConnect"));
+        _airconsole.Set("onDisconnect", CreateCallback("cbOnDisconnect"));
     }
 
     private JavaScriptObject CreateCallback(String func)
@@ -88,5 +100,10 @@ public class AirConsole : Node
     private void cbOnConnect(int deviceId)
     {
         EmitSignal("OnConnect", deviceId);
+    }
+
+    private void cbOnDisconnect(int deviceId)
+    {
+        EmitSignal("OnDisconnect", deviceId);
     }
 }

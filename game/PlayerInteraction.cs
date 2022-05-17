@@ -43,7 +43,7 @@ public class PlayerInteraction : Node
         //TODO: maybe check if it has houses on it?
         //see what the rules say.
 
-        string message = $"{playerGiver.Id} wants to trade {property.Data.Label} for ${price}.\nDo you accept?";
+        string message = $"{playerGiver.Nickname} wants to trade {property.Data.Label} for ${price}.\nDo you accept?";
         bool response = await _dialogManager.ShowDialog(playerReceiver, message);
 
         //target accepted deal
