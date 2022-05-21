@@ -8,6 +8,7 @@ public class Controller : Node
     [Signal] public delegate void OnAction(int playerId, Controller.Action action, Godot.Collections.Array arguments);
     [Signal] public delegate void DebugShake(int index);
 
+    //FIXME: change duplicated actions for arguments
     public enum Action
     {
         NONE, SHAKE, BUY, BUY_HOUSE, OMIT,

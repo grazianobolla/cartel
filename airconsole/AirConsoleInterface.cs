@@ -7,6 +7,7 @@ public class AirConsoleInterface : Node
 
     private AirConsole _airConsole;
     private PlayerManager _playerManager;
+    private Game _game;
 
     public override void _Ready()
     {
@@ -16,6 +17,10 @@ public class AirConsoleInterface : Node
 
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
         _playerManager.Connect("AddedPlayer", this, "OnPlayerAdded");
+
+        _game = (Game)GetNode("/root/Game");
+        _game.Connect("FinshedTurn", this, nameof(OnGameTurnFinish));
+        _game.Connect("PlayerProcessing", this, nameof(OnGamePlayerProcessing));
     }
 
     public void DisplayDialog(int playerId, string text)
@@ -23,8 +28,10 @@ public class AirConsoleInterface : Node
         if (!_airConsole.ready)
             return;
 
+        text = Marshalls.Utf8ToBase64(text); //encode text on base64, easier to handle on the controller side
+
         JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
-        data.Set("instruction", "display-dialog");
+        data.Set("instruction", "dialog-view");
         data.Set("content", text);
         _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
     }
@@ -32,6 +39,16 @@ public class AirConsoleInterface : Node
     public string GetPlayerNickname(int playerId)
     {
         return _airConsole.GetNickname(_airConsole.ConvertPlayerNumberToDeviceId(playerId));
+    }
+
+    public void SetControllerView(int playerId, string view)
+    {
+        if (!_airConsole.ready)
+            return;
+
+        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
+        data.Set("instruction", view);
+        _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
     }
 
     private void OnPlayerAdded(Player player)
@@ -60,5 +77,15 @@ public class AirConsoleInterface : Node
     {
         ControllerCount--;
         //_airConsole.SetActivePlayers(ControllerCount);
+    }
+
+    private void OnGameTurnFinish(int nextPlayerId)
+    {
+        SetControllerView(nextPlayerId, "dice-view");
+    }
+
+    private void OnGamePlayerProcessing(int playerId)
+    {
+        SetControllerView(playerId, "panel-view");
     }
 }

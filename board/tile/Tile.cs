@@ -44,6 +44,9 @@ public class Tile : Spatial
 
     public bool IsOwner(Player player)
     {
+        if (PlayerOwner == null)
+            return false;
+
         return player.Id == PlayerOwner.Id;
     }
 

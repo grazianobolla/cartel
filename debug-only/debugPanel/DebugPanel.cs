@@ -67,22 +67,22 @@ public class DebugPanel : Control
         _controller.SendDebugControllerMessage(_game.CurrentPlayerId, Controller.Action.TILE_SELECTOR_FWD, null);
     }
 
-    private async void _on_Dialog_pressed()
+    private int _pc = 0;
+    private void _on_AddPlayer_pressed()
     {
-        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
-        var response = await _dialog.ShowDialog(PlayerManager.GetPlayer(id));
-        GD.Print("player said ", response, " to dialog!");
+        _playerManager.AddPlayer(_pc, 1500, "Jhonny");
+        _pc++;
     }
 
     private void _on_DialogCancel_pressed()
     {
-        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
+        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer5/TextEdit").Text.ToInt();
         _controller.SendDebugControllerMessage(id, Controller.Action.DIALOG_CANCEL, null);
     }
 
     private void _on_DialogAccept_pressed()
     {
-        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer4/TextEdit").Text.ToInt();
+        int id = GetNode<TextEdit>("VBoxContainer/HBoxContainer5/TextEdit").Text.ToInt();
         _controller.SendDebugControllerMessage(id, Controller.Action.DIALOG_ACCEPT, null);
     }
 }

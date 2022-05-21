@@ -6,6 +6,9 @@ using static Godot.GD;
 public partial class Game : Spatial
 {
     [Signal] public delegate void StartedTurn();
+    [Signal] public delegate void PlayerProcessing(int playerId);
+    [Signal] public delegate void FinshedTurn(int nextPlayerId);
+
     [Signal] private delegate void FinishedInteraction();
 
     public enum State { WAITING, MOVING, PROCESSING, INTERACTING };
@@ -48,6 +51,8 @@ public partial class Game : Spatial
         GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
         SpawnPlayers();
         _camera.Overview();
+
+        _airConsoleInterface.SetControllerView(CurrentPlayerId, "dice-view");
     }
 
     //Called when a player requests an interaction with the game
@@ -103,6 +108,8 @@ public partial class Game : Spatial
         //Second state of the cycle
         CurrentState = State.PROCESSING;
 
+        EmitSignal(nameof(PlayerProcessing), CurrentPlayerId);
+
         //Process landing, does things like
         //charge player depending on landing tile,
         //sending the player to prision etc.
@@ -130,6 +137,8 @@ public partial class Game : Spatial
             NextPlayerTurn();
 
         CurrentState = State.WAITING;
+
+        EmitSignal(nameof(FinshedTurn), CurrentPlayerId);
     }
 
     //Moves the player and checks for start bonus
