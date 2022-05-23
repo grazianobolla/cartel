@@ -7,6 +7,7 @@ public class DebugPanel : Control
     private PlayerManager _playerManager;
     private CameraController _camera;
     private DialogManager _dialog;
+    private AirConsole _airconsole;
 
     public override void _Ready()
     {
@@ -15,6 +16,7 @@ public class DebugPanel : Control
         _playerManager = (PlayerManager)GetNode("/root/Game/PlayerManager");
         _camera = (CameraController)GetNode("/root/Game/GameCamera");
         _dialog = (DialogManager)GetNode("/root/Game/DialogManager");
+        _airconsole = (AirConsole)GetNode("/root/AirConsole");
 
         // if (OS.GetName() == "HTML5")
         // {

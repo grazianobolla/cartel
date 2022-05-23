@@ -7,6 +7,7 @@ public partial class Game : Spatial
 {
     [Signal] public delegate void StartedTurn();
     [Signal] public delegate void PlayerProcessing(int playerId);
+    [Signal] public delegate void PlayerInteracting(int nextPlayerId);
     [Signal] public delegate void FinshedTurn(int nextPlayerId);
 
     [Signal] private delegate void FinishedInteraction();
@@ -94,9 +95,8 @@ public partial class Game : Spatial
             return;
 
         //First state of the cycle
-        CurrentState = State.MOVING;
-
         EmitSignal(nameof(StartedTurn));
+        CurrentState = State.MOVING;
 
         //Camera focus the player
         _camera.Focus(player);
@@ -106,9 +106,8 @@ public partial class Game : Spatial
         await MoveState(player, diceNumber);
 
         //Second state of the cycle
-        CurrentState = State.PROCESSING;
-
         EmitSignal(nameof(PlayerProcessing), CurrentPlayerId);
+        CurrentState = State.PROCESSING;
 
         //Process landing, does things like
         //charge player depending on landing tile,
@@ -121,7 +120,9 @@ public partial class Game : Spatial
         if (player.CanPlay())
         {
             //Third state of the cycle
+            EmitSignal(nameof(PlayerInteracting), CurrentPlayerId);
             CurrentState = State.INTERACTING;
+
             _tileInteractor.EnableTileSelection(player.Index);
             await ToSignal(this, nameof(FinishedInteraction));
             _tileInteractor.DisableTileSelection();

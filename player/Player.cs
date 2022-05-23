@@ -5,7 +5,8 @@ using static Godot.GD;
 
 public partial class Player : Spatial
 {
-    [Signal] public delegate void MoneyChange(int id, int money);
+    [Signal] public delegate void MoneyChange(int playerId, int money);
+    [Signal] public delegate void UpdatedTiles(int playerId);
 
     public enum State { PLAYING, JAILED };
 
@@ -46,6 +47,7 @@ public partial class Player : Spatial
         if (!OwnedTiles.Contains(tile))
         {
             OwnedTiles.Add(tile);
+            EmitSignal(nameof(UpdatedTiles), Id);
             return;
         }
 
@@ -55,6 +57,7 @@ public partial class Player : Spatial
     public void RemoveTile(Tile tile)
     {
         OwnedTiles.Remove(tile);
+        EmitSignal(nameof(UpdatedTiles), Id);
     }
 
     public async Task Jail(int jailTileIndex)

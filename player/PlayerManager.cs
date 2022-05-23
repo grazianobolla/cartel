@@ -17,10 +17,10 @@ public class PlayerManager : Node
     public void AddPlayer(int id, int startingMoney, string nickname)
     {
         Player player = (Player)_playerScene.Instance();
-        EmitSignal(nameof(AddedPlayer), player);
         AddChild(player);
         _playersList.Add(player);
         player.Initialize(id, startingMoney, nickname);
+        EmitSignal(nameof(AddedPlayer), player);
         Print($"added player {player.Nickname}:{player.Id}");
     }
 

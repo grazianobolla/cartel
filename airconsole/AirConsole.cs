@@ -72,6 +72,11 @@ public class AirConsole : Node
         SafeCall("message", deviceId, obj);
     }
 
+    public void Broadcast(JavaScriptObject obj)
+    {
+        SafeCall("broadcast", obj);
+    }
+
     public string GetNickname(int deviceId)
     {
         return (string)SafeCall("getNickname", deviceId);

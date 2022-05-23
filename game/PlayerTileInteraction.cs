@@ -48,9 +48,21 @@ public class PlayerTileInteraction : Node
                 _tileSelector.MoveTo((int)arguments[0]);
                 return false;
 
+            //[tileIndex, playerId, price]
             case Controller.Action.TRADE:
-                Tile tile = Board.GetTile(_tileSelector.CurrentIndex);
-                await _playerInteraction.TradeProperty(tile, player, PlayerManager.GetPlayer((int)arguments[0]), (int)arguments[1]);
+                try
+                {
+                    int tileIndex = (int)arguments[0];
+                    int playerId = (int)arguments[1];
+                    int price = (int)arguments[2];
+
+                    Tile tile = Board.GetTile(tileIndex);
+                    Player targetPlayer = PlayerManager.GetPlayer(playerId);
+
+                    await _playerInteraction.TradeProperty(tile, player, targetPlayer, price);
+                }
+                catch { }
+
                 return false;
 
             default:
@@ -79,7 +91,7 @@ public class PlayerTileInteraction : Node
             case Tile.Type.CHANCE:
                 var chanceData = template.GetRandomChanceData();
                 player.Money += chanceData.cost;
-                string message = $"{chanceData.text}\n{chanceData.cost}";
+                string message = $"{chanceData.text}\nCost: {chanceData.cost}";
                 await _dialogManager.ShowDialog(player, message);
                 break;
 
