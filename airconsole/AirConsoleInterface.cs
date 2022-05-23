@@ -65,8 +65,22 @@ public class AirConsoleInterface : Node
         _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
     }
 
+    private void DisplayUpdateNickname(int playerId, string nickname)
+    {
+        if (!_airConsole.ready)
+            return;
+
+        JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");
+        data.Set("instruction", "update-nickname");
+        data.Set("content", nickname);
+        _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
+    }
+
     private void BroadcastUpdatePlayerList()
     {
+        if (!_airConsole.ready)
+            return;
+
         JavaScriptObject playersObject = (JavaScriptObject)JavaScript.CreateObject("Object");
         foreach (Player p in _playerManager.PlayerList)
         {
@@ -80,8 +94,7 @@ public class AirConsoleInterface : Node
         _airConsole.Broadcast(data);
     }
 
-    //callbacks
-    private void OnPlayerOwnedTilesUpdate(int playerId)
+    private void UpdatePropertiesList(int playerId)
     {
         if (!_airConsole.ready)
             return;
@@ -101,6 +114,25 @@ public class AirConsoleInterface : Node
         _airConsole.Message(_airConsole.ConvertPlayerNumberToDeviceId(playerId), data);
     }
 
+    //callbacks
+    private void OnPlayerAdded(Player player)
+    {
+        //connect callbacks
+        player.Connect("MoneyChange", this, "OnPlayerMoneyChange");
+        player.Connect("UpdatedTiles", this, "OnPlayerOwnedTilesUpdate");
+
+        BroadcastUpdatePlayerList();
+
+        //sync
+        DisplayUpdateMoney(player.Id, player.Money);
+        DisplayUpdateNickname(player.Id, player.Nickname);
+    }
+
+    private void OnPlayerOwnedTilesUpdate(int playerId)
+    {
+        UpdatePropertiesList(playerId);
+    }
+
     private void OnControllerConnect(int deviceId)
     {
         ControllerCount++;
@@ -111,15 +143,6 @@ public class AirConsoleInterface : Node
     {
         ControllerCount--;
         //_airConsole.SetActivePlayers(ControllerCount);
-    }
-
-    private void OnPlayerAdded(Player player)
-    {
-        //connect callbacks
-        player.Connect("MoneyChange", this, "DisplayUpdateMoney");
-        player.Connect("UpdatedTiles", this, "OnPlayerOwnedTilesUpdate");
-
-        BroadcastUpdatePlayerList();
     }
 
     private void OnGameTurnFinish(int nextPlayerId)
@@ -135,5 +158,10 @@ public class AirConsoleInterface : Node
     private void OnGamePlayerInteracting(int playerId)
     {
         SetControllerView(playerId, "panel-view");
+    }
+
+    private void OnPlayerMoneyChange(int playerId, int value)
+    {
+        DisplayUpdateMoney(playerId, value);
     }
 }

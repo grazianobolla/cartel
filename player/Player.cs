@@ -17,9 +17,15 @@ public partial class Player : Spatial
     public int JailTime { get; private set; } = 0;
     public Color Color { get; private set; } = Colors.White;
     public string Nickname { get; private set; } = "Jhonny Noname";
+    public NameTag NameTag { get; private set; }
 
     private Vector3 _posOffset = new Vector3(0, 0.25f, 0);
     private int _money = 0;
+
+    public override void _Ready()
+    {
+        NameTag = (NameTag)GetNode("Position3D/NameTag");
+    }
 
     public override void _Process(float delta)
     {
@@ -37,9 +43,15 @@ public partial class Player : Spatial
 
         //choose a random color for player mesh
         //TODO: might want to implement a less random system
+        //and organize
         var randomColor = Utils.GetRandomColor();
+        randomColor.s = 0.5f;
+
         this.Color = randomColor;
         UpdateMesh(randomColor);
+
+        //set player nickname and color on tag
+        NameTag.SetTagProperties(nickname, randomColor);
     }
 
     public void AddTile(Tile tile)

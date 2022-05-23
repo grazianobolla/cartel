@@ -58,4 +58,10 @@ public class PlayerManager : Node
     {
         get { return _playersList; }
     }
+
+    public void ToggleNameTags(bool value)
+    {
+        foreach (Player player in _playersList)
+            player.NameTag.ToggleEnable(value);
+    }
 }

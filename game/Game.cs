@@ -123,9 +123,14 @@ public partial class Game : Spatial
             EmitSignal(nameof(PlayerInteracting), CurrentPlayerId);
             CurrentState = State.INTERACTING;
 
+            _camera.Overview();
+            _playerManager.ToggleNameTags(true);
+
             _tileInteractor.EnableTileSelection(player.Index);
             await ToSignal(this, nameof(FinishedInteraction));
             _tileInteractor.DisableTileSelection();
+
+            _playerManager.ToggleNameTags(false);
         }
 
         _camera.Overview();

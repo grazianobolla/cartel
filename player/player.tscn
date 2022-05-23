@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://player/Player.cs" type="Script" id=1]
 [ext_resource path="res://scripts/transformInterpolator/TransformInterpolator.cs" type="Script" id=2]
+[ext_resource path="res://player/NameTag.cs" type="Script" id=3]
+[ext_resource path="res://resources/fonts/Koulen-Regular.ttf" type="DynamicFontData" id=4]
 
 [sub_resource type="CylinderMesh" id=1]
 top_radius = 0.8
@@ -15,6 +17,13 @@ size = Vector3( 0.5, 0.5, 1 )
 
 [sub_resource type="SpatialMaterial" id=3]
 albedo_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 22
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_filter = true
+font_data = ExtResource( 4 )
 
 [node name="Player" type="Spatial"]
 script = ExtResource( 1 )
@@ -31,3 +40,22 @@ material/0 = SubResource( 6 )
 transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -0.75 )
 mesh = SubResource( 5 )
 material/0 = SubResource( 3 )
+
+[node name="Position3D" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0 )
+
+[node name="NameTag" type="Control" parent="Position3D"]
+script = ExtResource( 3 )
+
+[node name="NameLabel" type="Label" parent="Position3D/NameTag"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -62.5
+margin_top = -20.0
+margin_right = 62.5
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 7 )
+text = "Jhonny Noname"
+align = 1

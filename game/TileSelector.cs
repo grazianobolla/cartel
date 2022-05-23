@@ -5,20 +5,13 @@ public class TileSelector : Node
 {
     [Export] private NodePath _cameraPath;
 
-    private CameraController _camera;
     public int CurrentIndex = 0;
     public bool Enabled = false;
-
-    public override void _Ready()
-    {
-        _camera = (CameraController)GetNode(_cameraPath);
-    }
 
     public void Enable(int index)
     {
         CurrentIndex = index;
 
-        _camera.Overview();
         Board.GetTile(CurrentIndex).Highlight(true);
         Enabled = true;
     }

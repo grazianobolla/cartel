@@ -58,6 +58,7 @@ _focusFOV = 45.0
 
 [node name="Camera2" type="Camera" parent="."]
 transform = Transform( -0.325567, 0.656814, -0.680148, 0, 0.719339, 0.694659, 0.945519, 0.226158, -0.234193, -17.7721, 1.15769, 16.8001 )
+current = true
 script = ExtResource( 8 )
 __meta__ = {
 "_editor_description_": ""
