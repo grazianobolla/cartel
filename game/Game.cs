@@ -25,7 +25,7 @@ public partial class Game : Spatial
     private PlayerManager _playerManager;
     private PlayerTileInteraction _tileInteractor;
     private CameraController _camera;
-    private BoardGenerator _board;
+    private Board _board;
 
     public override void _Ready()
     {
@@ -33,7 +33,7 @@ public partial class Game : Spatial
         _tileInteractor = (PlayerTileInteraction)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
-        _board = (BoardGenerator)GetNode("BoardGenerator");
+        _board = (Board)GetNode("Board");
 
         Randomize();
         ConnectSignals();

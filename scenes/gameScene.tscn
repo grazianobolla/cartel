@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://board/BoardGenerator.cs" type="Script" id=1]
+[ext_resource path="res://board/Board.cs" type="Script" id=1]
 [ext_resource path="res://game/Game.cs" type="Script" id=2]
 [ext_resource path="res://camera/GameCamera.tscn" type="PackedScene" id=3]
 [ext_resource path="res://player/PlayerManager.cs" type="Script" id=4]
@@ -25,7 +25,7 @@ script = ExtResource( 2 )
 [node name="AirConsoleInterface" type="Node" parent="."]
 script = ExtResource( 9 )
 
-[node name="BoardGenerator" type="Node" parent="."]
+[node name="Board" type="Node" parent="."]
 script = ExtResource( 1 )
 _tileGroup = NodePath("../TileGroup")
 
