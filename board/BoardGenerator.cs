@@ -16,9 +16,9 @@ public class BoardGenerator : Node
         InstanceBoard(template.GetSideCount(), "res://board/tile/tile.tscn", (Spatial)GetNode(_tileGroup), _tileSize);
         FillBoardTypes
         (
-            template.GetTileCount(Tile.Type.PROPERTY),
-            template.GetTileCount(Tile.Type.STATE),
-            template.GetTileCount(Tile.Type.CHANCE)
+            template.GetTileSideCount(Tile.Type.PROPERTY),
+            template.GetTileSideCount(Tile.Type.STATE),
+            template.GetTileSideCount(Tile.Type.CHANCE)
         );
         FillBoard(template.GenerateDataList(_boardList));
 
@@ -91,7 +91,7 @@ public class BoardGenerator : Node
     {
         //Should not happen
         if (dataList.Count != _boardList.Count)
-            PrintErr("dataList and _boardList count do not match");
+            PrintErr("dataList and boardList count do not match");
 
         for (int i = 0; i < _boardList.Count; i++)
         {

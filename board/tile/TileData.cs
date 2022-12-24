@@ -11,8 +11,6 @@ public class TileData
     private int _price = 0;
     private int _houseCount = 0;
 
-    public TileData() { }
-
     public TileData(String label, int price, int group, Color color)
     {
         this.Label = label;

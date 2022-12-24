@@ -3,7 +3,7 @@
 	"settings": {
 		"initial-money": 1500
 	},
-	"tile-count": {
+	"side-count": {
 		"property": 6,
 		"state": 1,
 		"chance": 2
@@ -11,6 +11,9 @@
 	"properties": {
 		"normal": [
 			[
+				{
+					"color": "#31633e"
+				},
 				{
 					"label": "Mediterranean Avenue",
 					"price": 60
@@ -26,6 +29,9 @@
 			],
 			[
 				{
+					"color": "#cb6ff2"
+				},
+				{
 					"label": "Oriental Avenue",
 					"price": 100
 				},
@@ -39,6 +45,9 @@
 				}
 			],
 			[
+				{
+					"color": "#ff0000"
+				},
 				{
 					"label": "St. Charles Place",
 					"price": 140
@@ -54,6 +63,9 @@
 			],
 			[
 				{
+					"color": "#00ff00"
+				},
+				{
 					"label": "St. James Place",
 					"price": 180
 				},
@@ -67,6 +79,9 @@
 				}
 			],
 			[
+				{
+					"color": "#0000ff"
+				},
 				{
 					"label": "Kentucky Avenue",
 					"price": 220
@@ -82,6 +97,9 @@
 			],
 			[
 				{
+					"color": "#ff00ff"
+				},
+				{
 					"label": "Atlantic Avenue",
 					"price": 260
 				},
@@ -96,6 +114,9 @@
 			],
 			[
 				{
+					"color": "#00ffff"
+				},
+				{
 					"label": "Pacific Avenue",
 					"price": 300
 				},
@@ -109,6 +130,9 @@
 				}
 			],
 			[
+				{
+					"color": "#ffff00"
+				},
 				{
 					"label": "Park Place",
 					"price": 350
@@ -126,11 +150,13 @@
 		"state": [
 			{
 				"label": "Railroad Company",
-				"price": 200
+				"price": 200,
+				"color": "#784e06"
 			},
 			{
 				"label": "Water Company",
-				"price": 150
+				"price": 150,
+				"color": "#161a9c"
 			}
 		]
 	},

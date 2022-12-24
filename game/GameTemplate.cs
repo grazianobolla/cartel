@@ -6,33 +6,35 @@ using static Godot.GD;
 public class GameTemplate
 {
     private JObject _template;
+    private JToken _settings;
 
     public GameTemplate(String path)
     {
         String jsonString = Utils.ReadFile(path);
         _template = JObject.Parse(jsonString);
+        _settings = _template["settings"];
     }
 
     public bool Check() { return true; }
 
     public int GetSideCount()
     {
-        var tileCount = _template["tile-count"];
+        var tileCount = _template["side-count"];
         return (int)tileCount["property"] + (int)tileCount["state"] + (int)tileCount["chance"];
     }
 
-    public int GetTileCount(Tile.Type type)
+    public int GetTileSideCount(Tile.Type type)
     {
         switch (type)
         {
             case Tile.Type.PROPERTY:
-                return (int)_template["tile-count"]["property"];
+                return (int)_template["side-count"]["property"];
 
             case Tile.Type.STATE:
-                return (int)_template["tile-count"]["state"];
+                return (int)_template["side-count"]["state"];
 
             case Tile.Type.CHANCE:
-                return (int)_template["tile-count"]["chance"];
+                return (int)_template["side-count"]["chance"];
         }
 
         PrintErr("wrong tile type ", type);
@@ -41,7 +43,7 @@ public class GameTemplate
 
     public int GetStartingMoney()
     {
-        return (int)_template["settings"]["initial-money"];
+        return (int)_settings["initial-money"];
     }
 
     public (String text, int cost) GetRandomChanceData()
@@ -52,17 +54,17 @@ public class GameTemplate
         return ((String)data["text"], (int)data["cost"]);
     }
 
-    //TODO: clean up the hell out of this!
     public List<TileData> GenerateDataList(List<Tile> boardList)
     {
         List<TileData> dataList = new List<TileData>();
 
-        int propertyCount, groupCount, stateCount, cornerCount;
-        propertyCount = groupCount = stateCount = cornerCount = 0;
+        int groupIndex = 0;
+        int propertyIndex = 0;
+
+        int stateCount = 0;
+        int cornerCount = 0;
 
         var properties = _template["properties"];
-        Godot.Color groupColor = Utils.GetRandomColor();
-        groupColor.s = 0.8f;
 
         foreach (Tile tile in boardList)
         {
@@ -70,30 +72,50 @@ public class GameTemplate
             {
                 case Tile.Type.PROPERTY:
                     {
-                        var info = properties["normal"][groupCount][propertyCount];
-                        TileData data = new TileData((String)info["label"], (int)info["price"], groupCount, groupColor);
+                        int currentPropertiesGroupSize = 3;
+
+                        // get group data
+                        var groupData = properties["normal"][groupIndex][0];
+
+                        //get tile info
+                        propertyIndex = (propertyIndex % currentPropertiesGroupSize) + 1;
+                        var tileInfo = properties["normal"][groupIndex][propertyIndex];
+
+                        // define group color based on group data
+                        Godot.Color groupColor = new Godot.Color((string)groupData["color"]);
+
+                        // generate TileData obj and fill
+                        TileData data = new TileData(
+                            (String)tileInfo["label"],
+                            (int)tileInfo["price"],
+                            groupIndex,
+                            groupColor);
+
                         dataList.Add(data);
 
-                        int groupSize = ((JArray)properties["normal"][groupCount]).Count - 1;
-
-                        if (propertyCount >= groupSize)
+                        // if propertyIndex >= groupSize, we advance to the next group
+                        if (propertyIndex >= currentPropertiesGroupSize)
                         {
-                            groupCount = (groupCount + 1) % ((JArray)properties["normal"]).Count;
-                            groupColor = Utils.GetRandomColor();
-                            groupColor.s = 0.8f;
+                            groupIndex = (groupIndex + 1) % ((JArray)properties["normal"]).Count;
                         }
 
-                        //TODO: magic num
-                        propertyCount = (propertyCount + 1) % 3;
                         break;
                     }
 
                 case Tile.Type.STATE:
                     {
-                        var info = properties["state"][stateCount];
-                        TileData data = new TileData((String)info["label"], (int)info["price"], stateCount, Godot.Colors.Black);
+                        var tileInfo = properties["state"][stateCount];
+                        Godot.Color groupColor = new Godot.Color((string)tileInfo["color"]);
+                        TileData data = new TileData(
+                            (String)tileInfo["label"],
+                            (int)tileInfo["price"],
+                            stateCount,
+                            groupColor);
+
                         dataList.Add(data);
-                        stateCount = (stateCount + 1) % GetTileCount(Tile.Type.STATE);
+
+                        int stateTilesPerSide = GetTileSideCount(Tile.Type.STATE);
+                        stateCount = (stateCount + 1) % stateTilesPerSide;
                         break;
                     }
 
@@ -112,7 +134,7 @@ public class GameTemplate
 
                 default:
                     {
-                        dataList.Add(new TileData());
+                        PrintErr("unkown tile type");
                         break;
                     }
             }
