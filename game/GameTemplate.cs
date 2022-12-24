@@ -52,7 +52,7 @@ public class GameTemplate
         return ((String)data["text"], (int)data["cost"]);
     }
 
-    //TODO: clean up the hell out of ths!
+    //TODO: clean up the hell out of this!
     public List<TileData> GenerateDataList(List<Tile> boardList)
     {
         List<TileData> dataList = new List<TileData>();
@@ -87,6 +87,7 @@ public class GameTemplate
                         propertyCount = (propertyCount + 1) % 3;
                         break;
                     }
+
                 case Tile.Type.STATE:
                     {
                         var info = properties["state"][stateCount];
@@ -95,6 +96,7 @@ public class GameTemplate
                         stateCount = (stateCount + 1) % GetTileCount(Tile.Type.STATE);
                         break;
                     }
+
                 case Tile.Type.CHANCE:
                     {
                         dataList.Add(new TileData("Chance", 0, 0, Godot.Colors.Black));
@@ -107,6 +109,7 @@ public class GameTemplate
                         cornerCount += 1;
                         break;
                     }
+
                 default:
                     {
                         dataList.Add(new TileData());

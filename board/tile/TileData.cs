@@ -6,6 +6,7 @@ public class TileData
     public String Label { get; private set; } = "No Label";
     public int Group { get; private set; } = -1;
     public Color Color { get; private set; } = Colors.White;
+    public int HousePrice = 10; //TODO: get from template
 
     private int _price = 0;
     private int _houseCount = 0;
@@ -33,13 +34,8 @@ public class TileData
         get { return _price; }
     }
 
-    public int Fee
+    public int LandingFee
     {
-        get { return _houseCount * 10; }
-    }
-
-    public int HousePrice
-    {
-        get { return 10; }
+        get { return (_houseCount * 100) + _price; } //TODO: calculate landing fee based on something reasonable xd
     }
 }

@@ -28,7 +28,6 @@ public class PlayerTileInteraction : Node
                 BuyTile(player, player.Index);
                 return false;
 
-            //[tileIndex]
             case Controller.Action.BUY_HOUSE:
                 BuyHouse(player, _tileSelector.CurrentIndex);
                 return false;
@@ -44,10 +43,6 @@ public class PlayerTileInteraction : Node
                 _tileSelector.Move(false);
                 return false;
 
-            case Controller.Action.SELECT_TILE:
-                _tileSelector.MoveTo((int)arguments[0]);
-                return false;
-
             //[tileIndex, playerId, price]
             case Controller.Action.TRADE:
                 try
@@ -56,17 +51,19 @@ public class PlayerTileInteraction : Node
                     int playerId = (int)arguments[1];
                     int price = (int)arguments[2];
 
+                    Print("trading tile:", tileIndex, " to:", playerId, " price:", price);
+
                     Tile tile = Board.GetTile(tileIndex);
                     Player targetPlayer = PlayerManager.GetPlayer(playerId);
 
                     await _playerInteraction.TradeProperty(tile, player, targetPlayer, price);
                 }
-                catch { }
+                catch { GD.PrintErr("error while executing trade interaction"); }
 
                 return false;
 
             default:
-                //PrintErr("unkown action");
+                PrintErr("unkown action");
                 return false;
         }
     }
@@ -77,6 +74,7 @@ public class PlayerTileInteraction : Node
         //Current tile under the player
         Tile tile = Board.GetTile(player.Index);
 
+        //TODO: emit signals for each case
         switch (tile.TileType)
         {
             case Tile.Type.PROPERTY:
@@ -84,8 +82,8 @@ public class PlayerTileInteraction : Node
                 if (tile.PlayerOwner == player || tile.PlayerOwner == null)
                     return;
 
-                Print("landed on someones property, paying ", tile.Data.Fee);
-                PlayerInteraction.TransferMoney(player, tile.PlayerOwner, tile.Data.Fee);
+                Print("landed on someones property, paying ", tile.Data.LandingFee);
+                _playerInteraction.SafeTransferMoney(player, tile.PlayerOwner, tile.Data.LandingFee);
                 break;
 
             case Tile.Type.CHANCE:
@@ -139,6 +137,7 @@ public class PlayerTileInteraction : Node
         return true;
     }
 
+    //TODO: show error dialogs
     public bool BuyHouse(Player player, int tileIndex)
     {
         Tile tile = Board.GetTile(tileIndex);
@@ -178,6 +177,7 @@ public class PlayerTileInteraction : Node
         return false;
     }
 
+    //TODO: print signals
     public static void AssignTile(Player player, Tile tile)
     {
         if (tile.PlayerOwner != null)

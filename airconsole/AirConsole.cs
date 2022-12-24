@@ -82,18 +82,18 @@ public class AirConsole : Node
         return (string)SafeCall("getNickname", deviceId);
     }
 
-    private void ConnectCallbacks()
-    {
-        _airconsole.Set("onMessage", CreateCallback("cbOnMessage"));
-        _airconsole.Set("onConnect", CreateCallback("cbOnConnect"));
-        _airconsole.Set("onDisconnect", CreateCallback("cbOnDisconnect"));
-    }
-
     private JavaScriptObject CreateCallback(String func)
     {
         JavaScriptObject cb = JavaScript.CreateCallback(this, func);
         _callbacks.Add(cb);
         return cb;
+    }
+
+    private void ConnectCallbacks()
+    {
+        _airconsole.Set("onMessage", CreateCallback("cbOnMessage"));
+        _airconsole.Set("onConnect", CreateCallback("cbOnConnect"));
+        _airconsole.Set("onDisconnect", CreateCallback("cbOnDisconnect"));
     }
 
     private void cbOnMessage(Godot.Collections.Array args)

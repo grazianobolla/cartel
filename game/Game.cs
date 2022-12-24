@@ -9,6 +9,9 @@ public partial class Game : Spatial
     [Signal] public delegate void PlayerProcessing(int playerId);
     [Signal] public delegate void PlayerInteracting(int nextPlayerId);
     [Signal] public delegate void FinshedTurn(int nextPlayerId);
+    [Signal] public delegate void BeginCreateGame();
+    [Signal] public delegate void CreatedGame(int firstPlayerId);
+    [Signal] public delegate void CrossedStart(int playerId);
 
     [Signal] private delegate void FinishedInteraction();
 
@@ -22,7 +25,7 @@ public partial class Game : Spatial
     private PlayerManager _playerManager;
     private PlayerTileInteraction _tileInteractor;
     private CameraController _camera;
-    private AirConsoleInterface _airConsoleInterface;
+    private BoardGenerator _board;
 
     public override void _Ready()
     {
@@ -30,7 +33,7 @@ public partial class Game : Spatial
         _tileInteractor = (PlayerTileInteraction)GetNode("TileInteractor");
         _playerManager = (PlayerManager)GetNode("PlayerManager");
         _camera = (CameraController)GetNode("GameCamera");
-        _airConsoleInterface = (AirConsoleInterface)GetNode("AirConsoleInterface");
+        _board = (BoardGenerator)GetNode("BoardGenerator");
 
         Randomize();
         ConnectSignals();
@@ -44,16 +47,20 @@ public partial class Game : Spatial
 
     public void CreateGame(String templatePath = "res://templates/template0.json")
     {
+        EmitSignal(nameof(BeginCreateGame));
+
         _template = new GameTemplate(templatePath);
 
-        if (!_template.Check())
-            PrintErr("could not validate template");
+        if (_template.Check())
+        {
+            _board.GenerateFromTemplate(_template);
+            SpawnPlayers();
+            _camera.Overview();
+            EmitSignal(nameof(CreatedGame), CurrentPlayerId);
+            return;
+        }
 
-        GetNode<BoardGenerator>("BoardGenerator").GenerateFromTemplate(_template);
-        SpawnPlayers();
-        _camera.Overview();
-
-        _airConsoleInterface.SetControllerView(CurrentPlayerId, "dice-view");
+        PrintErr("could not validate template");
     }
 
     //Called when a player requests an interaction with the game
@@ -156,16 +163,17 @@ public partial class Game : Spatial
         {
             //TODO: load from template
             player.Money += 200;
+            EmitSignal(nameof(CrossedStart));
             Print("player ", player.Id, " get start bonus");
         }
     }
 
     private void SpawnPlayers()
     {
-        for (int i = 0; i < _airConsoleInterface.ControllerCount; i++)
+        for (int i = 0; i < _controller.GetControllerCount(); i++)
         {
             int startingMoney = _template.GetStartingMoney();
-            string nickname = _airConsoleInterface.GetPlayerNickname(i);
+            string nickname = _controller.GetPlayerNickname(i);
             _playerManager.AddPlayer(i, startingMoney, nickname);
         }
     }
@@ -183,7 +191,7 @@ public partial class Game : Spatial
 
     private uint GetDiceNumber()
     {
-        return Randi() % 12 + 1;
+        return (Randi() % 12) + 1;
     }
 
     private void OnDebugShake(int index)

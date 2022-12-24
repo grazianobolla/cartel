@@ -45,7 +45,9 @@ public class Tile : Spatial
     public bool IsOwner(Player player)
     {
         if (PlayerOwner == null)
+        {
             return false;
+        }
 
         return player.Id == PlayerOwner.Id;
     }
@@ -57,11 +59,10 @@ public class Tile : Spatial
 
     public bool AddHouse()
     {
-        if (TileType != Type.PROPERTY)
+        if (TileType != Type.PROPERTY || Data.HouseCount >= MAX_HOUSE_COUNT)
+        {
             return false;
-
-        if (Data.HouseCount >= MAX_HOUSE_COUNT)
-            return false;
+        }
 
         Data.HouseCount += 1;
 
@@ -89,17 +90,6 @@ public class Tile : Spatial
         _animationPlayer.PlayBackwards("OwnerIndicatorShow");
     }
 
-    private void SetGroupMesh(Color color)
-    {
-        GetNode<MeshInstance>("GroupMesh").Visible = true;
-        GetNode<MeshInstance>("GroupMesh").GetSurfaceMaterial(0).Set("albedo_color", color);
-    }
-
-    private void SetText(String text)
-    {
-        GetNode<Label>("Viewport/Label").Text = text;
-    }
-
     private void UpdateVisual()
     {
         switch (this.TileType)
@@ -116,6 +106,27 @@ public class Tile : Spatial
             default:
                 break;
         }
+    }
+
+    private void SetGroupMesh(Color color)
+    {
+        GetNode<MeshInstance>("GroupMesh").Visible = true;
+        GetNode<MeshInstance>("GroupMesh").GetSurfaceMaterial(0).Set("albedo_color", color);
+    }
+
+    private void SetText(String text)
+    {
+        var label = GetNode<Label3D>("Label3D");
+        const int MAX_LABEL_LENGHT_COUNT = 14; //TODO: magic number
+
+        label.Visible = true;
+
+        if (text.Length >= MAX_LABEL_LENGHT_COUNT)
+        {
+            text = $"{text.Substr(0, MAX_LABEL_LENGHT_COUNT).StripEdges()}.";
+        }
+
+        label.Text = text;
     }
 
     public void Highlight(bool enabled, float animationTime = 0.5f, float heightOffset = 2.0f)

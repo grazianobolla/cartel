@@ -22,6 +22,8 @@ public class AirConsoleInterface : Node
         _game.Connect("FinshedTurn", this, nameof(OnGameTurnFinish));
         _game.Connect("PlayerProcessing", this, nameof(OnGamePlayerProcessing));
         _game.Connect("PlayerInteracting", this, nameof(OnGamePlayerInteracting));
+        _game.Connect("CreatedGame", this, nameof(OnGameCreated));
+        _game.Connect("BeginCreateGame", this, nameof(OnBeginCreateGame));
     }
 
     public void DisplayDialog(int playerId, string text)
@@ -43,8 +45,7 @@ public class AirConsoleInterface : Node
         return _airConsole.GetNickname(_airConsole.ConvertPlayerNumberToDeviceId(playerId));
     }
 
-    //TODO: make private
-    public void SetControllerView(int playerId, string view)
+    private void SetControllerView(int playerId, string view)
     {
         if (!_airConsole.ready)
             return;
@@ -136,13 +137,11 @@ public class AirConsoleInterface : Node
     private void OnControllerConnect(int deviceId)
     {
         ControllerCount++;
-        _airConsole.SetActivePlayers(ControllerCount);
     }
 
     private void OnControllerDisconnect(int deviceId)
     {
         ControllerCount--;
-        //_airConsole.SetActivePlayers(ControllerCount);
     }
 
     private void OnGameTurnFinish(int nextPlayerId)
@@ -163,5 +162,16 @@ public class AirConsoleInterface : Node
     private void OnPlayerMoneyChange(int playerId, int value)
     {
         DisplayUpdateMoney(playerId, value);
+    }
+
+    private void OnGameCreated(int firstPlayerId)
+    {
+        SetControllerView(firstPlayerId, "dice-view");
+    }
+
+    private void OnBeginCreateGame()
+    {
+        _airConsole.SetActivePlayers(6);
+        GD.Print("setting active players to 6");
     }
 }

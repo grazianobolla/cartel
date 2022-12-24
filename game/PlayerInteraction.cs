@@ -63,15 +63,7 @@ public class PlayerInteraction : Node
         return false;
     }
 
-    public static void TransferMoney(Player from, Player to, int amount)
-    {
-        //TODO: check if the player has money
-        from.Money -= amount;
-        to.Money += amount;
-        Print($"player {from.Id} transfered ${amount} to player {to.Id}");
-    }
-
-    public static bool SafeTransferMoney(Player from, Player to, int amount)
+    public bool SafeTransferMoney(Player from, Player to, int amount)
     {
         if (from.Money < amount)
             return false;
@@ -80,4 +72,11 @@ public class PlayerInteraction : Node
         return true;
     }
 
+    private void TransferMoney(Player from, Player to, int amount)
+    {
+        //TODO: check if the player has money
+        from.Money -= amount;
+        to.Money += amount;
+        Print($"player {from.Id} transfered ${amount} to player {to.Id}");
+    }
 }

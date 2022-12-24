@@ -8,7 +8,6 @@ public class CameraController : Camera
     [Export] private Vector3 _focusOffset = new Vector3(-10, 10, 0);
     [Export] private float _focusFOV = 50;
 
-
     public enum State { OVERVIEW, FOCUS };
     public State CurrentState { get; private set; } = State.OVERVIEW;
 

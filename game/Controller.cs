@@ -14,14 +14,16 @@ public class Controller : Node
         NONE, SHAKE, BUY, BUY_HOUSE, OMIT,
         TILE_SELECTOR_FWD, TILE_SELECTOR_BKW,
         DIALOG_ACCEPT, DIALOG_CANCEL,
-        SELECT_TILE, TRADE
+        TRADE
     };
 
     private AirConsole _airConsole;
+    private AirConsoleInterface _airConsoleInterface;
 
     public override void _Ready()
     {
         _airConsole = (AirConsole)GetNode("/root/AirConsole");
+        _airConsoleInterface = (AirConsoleInterface)GetNode("/root/Game/AirConsoleInterface");
 
         if (!_airConsole.ready)
             return;
@@ -30,6 +32,7 @@ public class Controller : Node
         Print("airconsole connected");
     }
 
+    //handles airconsole received messages
     private void OnAirconsoleControllerMessage(int playerNumber, Godot.JavaScriptObject data)
     {
         Godot.Collections.Array argumentArray = data.ToArray();
@@ -47,6 +50,16 @@ public class Controller : Node
         argumentArray.RemoveAt(0);
 
         EmitSignal(nameof(OnAction), playerNumber, action, argumentArray);
+    }
+
+    public int GetControllerCount()
+    {
+        return _airConsoleInterface.ControllerCount;
+    }
+
+    public string GetPlayerNickname(int playerId)
+    {
+        return _airConsoleInterface.GetPlayerNickname(playerId);
     }
 
     public void SendDebugControllerMessage(int playerNumber, Action instruction, Godot.Collections.Array data)
