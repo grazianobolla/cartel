@@ -95,7 +95,7 @@ public partial class Player : Spatial
 
     public bool HasGroup(int group)
     {
-        int count = OwnedTiles.FindAll(tile => tile.Data.Group == group).Count;
+        int count = OwnedTiles.FindAll(tile => (tile.Handler as TradeableHandler).Group == group).Count;
         return count == Board.GetTileGroupCount(group);
     }
 

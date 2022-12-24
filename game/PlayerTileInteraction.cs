@@ -79,29 +79,35 @@ public class PlayerTileInteraction : Node
         {
             case Tile.Type.PROPERTY:
             case Tile.Type.STATE:
-                if (tile.PlayerOwner == player || tile.PlayerOwner == null)
-                    return;
+                {
+                    TradeableHandler handler = tile.Handler as TradeableHandler;
+                    if (handler.PlayerOwner == player || handler.PlayerOwner == null)
+                        return;
 
-                Print("landed on someones property, paying ", tile.Data.LandingFee);
-                _playerInteraction.SafeTransferMoney(player, tile.PlayerOwner, tile.Data.LandingFee);
-                break;
-
+                    Print("landed on someones property, paying ", handler.LandingFee);
+                    _playerInteraction.SafeTransferMoney(player, handler.PlayerOwner, handler.LandingFee);
+                    break;
+                }
             case Tile.Type.CHANCE:
-                var chanceData = template.GetRandomChanceData();
-                player.Money += chanceData.cost;
-                string message = $"{chanceData.text}\nCost: {chanceData.cost}";
-                await _dialogManager.ShowDialog(player, message);
-                break;
-
+                {
+                    var chanceData = template.GetRandomChanceData();
+                    player.Money += chanceData.cost;
+                    string message = $"{chanceData.text}\nCost: {chanceData.cost}";
+                    await _dialogManager.ShowDialog(player, message);
+                    break;
+                }
             case Tile.Type.CORNER:
-                //3 is always the jail corner
-                if (tile.Data.Group != 3)
-                    return;
+                {
+                    CornerHandler handler = tile.Handler as CornerHandler;
 
-                int jailIndex = Board.Size / 4;
-                await player.Jail(jailIndex);
-                break;
+                    //3 is always the jail corner
+                    if (handler.CornerNumber != 3)
+                        return;
 
+                    int jailIndex = Board.Size / 4;
+                    await player.Jail(jailIndex);
+                    break;
+                }
             default:
                 PrintErr("unknown tile type");
                 break;
@@ -111,6 +117,7 @@ public class PlayerTileInteraction : Node
     public bool BuyTile(Player player, int tileIndex)
     {
         Tile tile = Board.GetTile(tileIndex);
+        TradeableHandler handler = tile.Handler as TradeableHandler;
 
         if (!tile.IsBuyable())
         {
@@ -118,22 +125,22 @@ public class PlayerTileInteraction : Node
             return false;
         }
 
-        if (tile.PlayerOwner != null)
+        if (handler.PlayerOwner != null)
         {
             Print("already owned tile");
             return false;
         }
 
-        if (player.Money < tile.Data.Price)
+        if (player.Money < handler.Price)
         {
             Print("you dont have enough money");
             return false;
         }
 
-        player.Money -= tile.Data.Price;
+        player.Money -= handler.Price;
         AssignTile(player, tile);
 
-        Print("player ", player.Index, " purchased tile ", tile.Data.Label, " at ", tile.Data.Price);
+        Print("player ", player.Index, " purchased tile ", handler.Label, " at ", handler.Price);
         return true;
     }
 
@@ -141,7 +148,9 @@ public class PlayerTileInteraction : Node
     public bool BuyHouse(Player player, int tileIndex)
     {
         Tile tile = Board.GetTile(tileIndex);
-        int price = tile.Data.HousePrice;
+        TradeableHandler handler = tile.Handler as TradeableHandler;
+
+        int price = handler.HousePrice;
 
         if (tile.TileType != Tile.Type.PROPERTY)
         {
@@ -149,7 +158,7 @@ public class PlayerTileInteraction : Node
             return false;
         }
 
-        if (!tile.IsOwner(player))
+        if (!handler.IsOwner(player))
         {
             Print("this is not your property");
             return false;
@@ -161,13 +170,13 @@ public class PlayerTileInteraction : Node
             return false;
         }
 
-        if (!player.HasGroup(tile.Data.Group))
+        if (!player.HasGroup(handler.Group))
         {
             Print("you dont have a full tile group yet");
             return false;
         }
 
-        if (tile.AddHouse())
+        if (handler.AddHouse())
         {
             player.Money -= price;
             return true;
@@ -180,15 +189,17 @@ public class PlayerTileInteraction : Node
     //TODO: print signals
     public static void AssignTile(Player player, Tile tile)
     {
-        if (tile.PlayerOwner != null)
+        TradeableHandler handler = tile.Handler as TradeableHandler;
+
+        if (handler.PlayerOwner != null)
         {
-            tile.PlayerOwner.RemoveTile(tile);
+            handler.PlayerOwner.RemoveTile(tile);
         }
 
-        tile.PlayerOwner = player;
+        handler.PlayerOwner = player;
         player.AddTile(tile);
 
-        Print(tile.Data.Label, " is now owned by player ", player.Id);
+        Print(handler.Label, " is now owned by player ", player.Id);
     }
 
     public void EnableTileSelection(int index = 0)

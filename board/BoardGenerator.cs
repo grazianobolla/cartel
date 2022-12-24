@@ -20,7 +20,7 @@ public class BoardGenerator : Node
             template.GetTileSideCount(Tile.Type.STATE),
             template.GetTileSideCount(Tile.Type.CHANCE)
         );
-        FillBoard(template.GenerateDataList(_boardList));
+        FillBoard(template.GenerateHandlers(_boardList));
 
         Board.SetBoardList(_boardList);
     }
@@ -87,16 +87,16 @@ public class BoardGenerator : Node
         }
     }
 
-    private void FillBoard(List<TileData> dataList)
+    private void FillBoard(List<TileHandler> handlerList)
     {
         //Should not happen
-        if (dataList.Count != _boardList.Count)
+        if (handlerList.Count != _boardList.Count)
             PrintErr("dataList and boardList count do not match");
 
         for (int i = 0; i < _boardList.Count; i++)
         {
             Tile tile = _boardList[i];
-            tile.Initialize(dataList[i], i);
+            tile.Initialize(handlerList[i], i);
         }
     }
 

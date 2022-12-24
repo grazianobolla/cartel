@@ -54,9 +54,9 @@ public class GameTemplate
         return ((String)data["text"], (int)data["cost"]);
     }
 
-    public List<TileData> GenerateDataList(List<Tile> boardList)
+    public List<TileHandler> GenerateHandlers(List<Tile> tileList)
     {
-        List<TileData> dataList = new List<TileData>();
+        List<TileHandler> dataList = new List<TileHandler>();
 
         int groupIndex = 0;
         int propertyIndex = 0;
@@ -66,7 +66,7 @@ public class GameTemplate
 
         var properties = _template["properties"];
 
-        foreach (Tile tile in boardList)
+        foreach (Tile tile in tileList)
         {
             switch (tile.TileType)
             {
@@ -84,14 +84,15 @@ public class GameTemplate
                         // define group color based on group data
                         Godot.Color groupColor = new Godot.Color((string)groupData["color"]);
 
-                        // generate TileData obj and fill
-                        TileData data = new TileData(
+                        // generate handler and fill
+                        TradeableHandler handler = new TradeableHandler(
+                            tile,
                             (String)tileInfo["label"],
                             (int)tileInfo["price"],
                             groupIndex,
                             groupColor);
 
-                        dataList.Add(data);
+                        dataList.Add(handler);
 
                         // if propertyIndex >= groupSize, we advance to the next group
                         if (propertyIndex >= currentPropertiesGroupSize)
@@ -106,7 +107,9 @@ public class GameTemplate
                     {
                         var tileInfo = properties["state"][stateCount];
                         Godot.Color groupColor = new Godot.Color((string)tileInfo["color"]);
-                        TileData data = new TileData(
+
+                        TradeableHandler data = new TradeableHandler(
+                            tile,
                             (String)tileInfo["label"],
                             (int)tileInfo["price"],
                             stateCount,
@@ -121,13 +124,13 @@ public class GameTemplate
 
                 case Tile.Type.CHANCE:
                     {
-                        dataList.Add(new TileData("Chance", 0, 0, Godot.Colors.Black));
+                        dataList.Add(new ChanceHandler(tile, "Chance"));
                         break;
                     }
 
                 case Tile.Type.CORNER:
                     {
-                        dataList.Add(new TileData("Corner", 0, cornerCount, Godot.Colors.Black));
+                        dataList.Add(new CornerHandler(tile, "Corner", cornerCount));
                         cornerCount += 1;
                         break;
                     }

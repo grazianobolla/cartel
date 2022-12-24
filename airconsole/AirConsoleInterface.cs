@@ -105,7 +105,7 @@ public class AirConsoleInterface : Node
 
         foreach (Tile tile in player.OwnedTiles)
         {
-            tilesObject.Set(tile.Index.ToString(), tile.Data.Label);
+            tilesObject.Set(tile.Index.ToString(), tile.Handler.Label);
         }
 
         JavaScriptObject data = (JavaScriptObject)JavaScript.CreateObject("Object");

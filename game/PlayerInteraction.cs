@@ -16,6 +16,8 @@ public class PlayerInteraction : Node
 
     public async Task<bool> TradeProperty(Tile property, Player playerGiver, Player playerReceiver, int price)
     {
+        TradeableHandler handler = property.Handler as TradeableHandler;
+
         if (playerGiver.Id == playerReceiver.Id)
         {
             Print("you cant trade with yourself");
@@ -28,13 +30,13 @@ public class PlayerInteraction : Node
             return false;
         }
 
-        if (!property.IsOwner(playerGiver))
+        if (!handler.IsOwner(playerGiver))
         {
             Print("you are not the owner of this tile");
             return false;
         }
 
-        if (property.IsOwner(playerReceiver))
+        if (handler.IsOwner(playerReceiver))
         {
             Print("player already owns this tile");
             return false;
@@ -43,7 +45,7 @@ public class PlayerInteraction : Node
         //TODO: maybe check if it has houses on it?
         //see what the rules say.
 
-        string message = $"{playerGiver.Nickname} wants to trade {property.Data.Label} for ${price}.\nDo you accept?";
+        string message = $"{playerGiver.Nickname} wants to trade {property.Handler.Label} for ${price}.\nDo you accept?";
         bool response = await _dialogManager.ShowDialog(playerReceiver, message);
 
         //target accepted deal

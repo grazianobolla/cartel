@@ -31,7 +31,7 @@ public static class Board
     //TODO: maybe this can be improved by loading from template
     public static int GetTileGroupCount(int checkGroup)
     {
-        int count = _boardList.FindAll(tile => (tile.TileType == Tile.Type.PROPERTY && tile.Data.Group == checkGroup)).Count;
+        int count = _boardList.FindAll(tile => (tile.TileType == Tile.Type.PROPERTY && (tile.Handler as TradeableHandler).Group == checkGroup)).Count;
         return count;
     }
 }

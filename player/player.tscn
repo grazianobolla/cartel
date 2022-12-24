@@ -19,7 +19,7 @@ size = Vector3( 0.5, 0.5, 1 )
 albedo_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 
 [sub_resource type="DynamicFont" id=7]
-size = 22
+size = 26
 outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
@@ -52,10 +52,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -62.5
-margin_top = -20.0
-margin_right = 62.5
-margin_bottom = 20.0
+margin_left = -74.0
+margin_top = -24.0
+margin_right = 74.0
+margin_bottom = 24.0
 custom_fonts/font = SubResource( 7 )
 text = "Jhonny Noname"
 align = 1
